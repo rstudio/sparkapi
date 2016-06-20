@@ -1,5 +1,5 @@
 ---
-title: "EC2 Tools for Spark"
+title: "Spark API Interface"
 output: github_document
 ---
 
