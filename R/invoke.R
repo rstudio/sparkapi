@@ -91,8 +91,14 @@ sparkapi_invoke_method <- function(connection, isStatic, objName, methodName, ..
     msg <- readString(backend)
     if (nzchar(msg))
       stop(msg, call. = FALSE)
-    else
-      stop("<unknown error>", call. = FALSE)
+    else {
+      # call unknown error handler if we have one
+      msg <- "<unknown error>"
+      handler <- sparkapi_unknown_error_handler()
+      if (!is.null(handler))
+        msg <- handler(connection)
+      stop(msg, call. = FALSE)
+    }
   }
 
   object <- readObject(backend)
@@ -116,5 +122,30 @@ sparkapi_attach_connection <- function(jobj, connection) {
   }
 
   jobj
+}
+
+# A scope where we can put mutable global state
+.globals <- new.env(parent = emptyenv())
+
+#' Get or set the current unknown error handler
+#'
+#' Get or set the current unknown error handler. This function
+#' is called when the backend fails to report an error message.
+#'
+#' @param handler A function which accepts a \code{sparkapi_connection}
+#'   and returns a single-element character vector. Pass \code{NULL}
+#'   to read the current value (if any).
+#'
+#' @return The current handler if \code{NULL} is passed and the
+#'   previously installed handler when a new handler is passed.
+#'
+#' @keywords internal
+#'
+#' @export
+sparkapi_unknown_error_handler <- function(handler = NULL) {
+  previous_handler <- .globals[["unknown_error_handler"]]
+  if (!is.null(handler))
+    .globals[["unknown_error_handler"]] <- handler
+  previous_handler
 }
 
