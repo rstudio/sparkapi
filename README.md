@@ -22,11 +22,11 @@ Calling Spark from R
 
 There are several functions available for calling the methods of Java objects and static methods of Java classes:
 
-| Function                 | Description                                    |
-|--------------------------|------------------------------------------------|
-| sparkapi\_invoke         | Call a method on an object.                    |
-| sparkapi\_invoke\_new    | Create a new object by invoking a constructor. |
-| sparkapi\_invoke\_static | Call a static method on an object.             |
+| Function                 | Description                                   |
+|--------------------------|-----------------------------------------------|
+| sparkapi\_invoke         | Call a method on an object                    |
+| sparkapi\_invoke\_new    | Create a new object by invoking a constructor |
+| sparkapi\_invoke\_static | Call a static method on an object             |
 
 For example, to create a new instance of the `java.math.BigInteger` class and then call the `longValue()` method on it you would use code like this:
 
@@ -86,7 +86,7 @@ In some cases you'll write wrapper functions that accept references to Spark obj
 <tbody>
 <tr class="odd">
 <td>sparkapi_connection</td>
-<td>Get the Spark connection associated with objects of various types.</td>
+<td>Get the Spark connection associated with objects of various types</td>
 </tr>
 <tr class="even">
 <td>sparkapi_spark_context</td>
@@ -98,7 +98,11 @@ In some cases you'll write wrapper functions that accept references to Spark obj
 </tr>
 <tr class="even">
 <td>sparkapi_jobj</td>
-<td>Get the Spark jobj associated with objects of various types.</td>
+<td>Get the Spark jobj associated with objects of various types</td>
+</tr>
+<tr class="odd">
+<td>sparkapi_dataframe</td>
+<td>Get the Spark DataFrame associated with objects of various types</td>
 </tr>
 </tbody>
 </table>
@@ -108,8 +112,8 @@ The use of these functions is illustrated in this (overly) simple example:
 ``` r
 analyze <- function(x, features) {
   
-  # normalize whatever we were passed (e.g. a dplyr tbl) into a Spark jobj
-  df <- sparkapi_jobj(x)
+  # normalize whatever we were passed (e.g. a dplyr tbl) into a DataFrame
+  df <- sparkapi_dataframe(x)
   
   # get the underlying connection so we can create new objects
   sc <- sparkapi_connection(df)
@@ -149,7 +153,7 @@ When creating R packages which implement interaces to Spark you may need to incl
 <tbody>
 <tr class="odd">
 <td>sparkapi_dependency</td>
-<td>Define a Spark dependency consisting of JAR files and Spark packages.</td>
+<td>Define a Spark dependency consisting of JAR files and Spark packages</td>
 </tr>
 </tbody>
 </table>
