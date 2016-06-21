@@ -11,6 +11,7 @@
 #' functions.
 #'
 #' @param spark_context Instance of SparkContext object
+#' @param hive_context Instance of HiveContext object
 #' @param backend R socket connection to backend
 #' @param monitor R socket connection for monitor
 #'
@@ -18,10 +19,16 @@
 #'
 #' @seealso \code{\link{sparkapi_connection}}
 #'
+#' @keywords internal
+#'
 #' @export
-sparkapi_connection_create <- function(spark_context, backend, monitor) {
+sparkapi_connection_create <- function(spark_context,
+                                       hive_context,
+                                       backend,
+                                       monitor) {
   structure(class = "sparkapi_connection", list(
     spark_context = spark_context,
+    hive_context = hive_context,
     backend = backend,
     monitor = monitor
   ))
@@ -38,6 +45,19 @@ sparkapi_connection_create <- function(spark_context, backend, monitor) {
 #' @export
 sparkapi_spark_context <- function(connection) {
   sparkapi_connection(connection)$spark_context
+}
+
+#' Get the HiveContext associated with a connection
+#'
+#' Get the HiveContext \code{spark_jobj} associated with a
+#' \code{sparkapi_connection}
+#'
+#' @param connection Connection to get HiveContext from
+#'
+#' @return Reference to HiveContext
+#' @export
+sparkapi_hive_context <- function(connection) {
+  sparkapi_connection(connection)$hive_context
 }
 
 

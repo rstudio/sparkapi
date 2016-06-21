@@ -13,7 +13,7 @@ The [SparkR](https://github.com/apache/spark/tree/master/R) package introduced a
 
 The **sparkapi** package factors out the core RPC protocol from SparkR, providing a mechanism for additional front-end packages (e.g. a dplyr-interface) to use the same protocol as well as extension packages to be written that support multiple front-end packages.
 
-To goal of the **sparkapi** package is to make the core types used by Spark front-end packages interoperable, enabling the creation of extension packages that work well with each other as well as all front-end packages.
+To goal of the sparkapi package is to make the core types used by Spark front-end packages interoperable, enabling the creation of extension packages that work well with each other as well as all front-end packages.
 
 ## Core Types
 
@@ -28,8 +28,8 @@ There are several functions available for calling the methods of Java objects an
 | Function | Description  |
 |----------------------------|---------------------------------------------|
 | sparkapi_invoke | Call a method on an object. |
-| spark\_invoke\_new | Create a new object by invoking a constructor. |
-| spark_invoke_static | Call a static method on an object.  |
+| sparkapi\_invoke\_new | Create a new object by invoking a constructor. |
+| sparkapi_invoke_static | Call a static method on an object.  |
 
 For example, to create a new instance of the `java.math.BigInteger` class and then call the `longValue()` method on it you would use code like this:
 
@@ -78,6 +78,7 @@ In some cases you'll write wrapper functions that accept references to Spark obj
 |----------------------------|---------------------------------------------|
 | sparkapi_connection | Get the Spark connection associated with objects of various types. |
 | sparkapi\_spark\_context | Get the SparkContext for a `sparkapi_connection` |
+| sparkapi\_hive_\_context | Get the HiveContext for a `sparkapi_connection` |
 | sparkapi_jobj | Get the Spark jobj associated with objects of various types. |
 
 The use of these functions is illustrated in this (overly) simple example:

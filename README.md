@@ -1,11 +1,6 @@
 Spark API Interface
 ================
 
-<!---
-// TODO: sparkapi_dependency
-// TODO: sparkapi_dataframe
-// TODO: magrittr re-export
---->
 Introduction
 ------------
 
@@ -13,7 +8,7 @@ The [SparkR](https://github.com/apache/spark/tree/master/R) package introduced a
 
 The **sparkapi** package factors out the core RPC protocol from SparkR, providing a mechanism for additional front-end packages (e.g. a dplyr-interface) to use the same protocol as well as extension packages to be written that support multiple front-end packages.
 
-To goal of the **sparkapi** package is to make the core types used by Spark front-end packages interoperable, enabling a constellation of R packages that provide interfaces between R and Spark, all of which work well together.
+To goal of the sparkapi package is to make the core types used by Spark front-end packages interoperable, enabling the creation of extension packages that work well with each other as well as all front-end packages.
 
 Core Types
 ----------
@@ -27,11 +22,11 @@ Calling Spark from R
 
 There are several functions available for calling the methods of Java objects and static methods of Java classes:
 
-| Function              | Description                                    |
-|-----------------------|------------------------------------------------|
-| sparkapi\_invoke      | Call a method on an object.                    |
-| spark\_invoke\_new    | Create a new object by invoking a constructor. |
-| spark\_invoke\_static | Call a static method on an object.             |
+| Function                 | Description                                    |
+|--------------------------|------------------------------------------------|
+| sparkapi\_invoke         | Call a method on an object.                    |
+| sparkapi\_invoke\_new    | Create a new object by invoking a constructor. |
+| sparkapi\_invoke\_static | Call a static method on an object.             |
 
 For example, to create a new instance of the `java.math.BigInteger` class and then call the `longValue()` method on it you would use code like this:
 
@@ -67,12 +62,13 @@ Here's an example of a wrapper function for the the text file line counting func
 
 ``` r
 count_lines <- function(sc, path) {
-  sc %>% sparkapi_invoke("textFile", path, as.integer(1)) %>% 
-    sparkapi_invoke("count")
+  sparkapi_spark_context(sc) %>% 
+    sparkapi_invoke("textFile", path, as.integer(1)) %>% 
+      sparkapi_invoke("count")
 }
 ```
 
-The `count_lines` function takes a `sparkapi_connection` (`sc`) argument, which when passed to `sparkapi_invoke` enables executing methods of the SparkContext object. Creating new objects also requires the `sc` argument.
+The `count_lines` function takes a `sparkapi_connection` (`sc`) argument which enables it to obtain a reference to the `SparkContext` object. Creating new objects also requires the `sc` argument.
 
 In some cases you'll write wrapper functions that accept references to Spark objects (for example, a Spark DataFrame). In this scenario the following functions are also useful:
 
@@ -93,12 +89,16 @@ In some cases you'll write wrapper functions that accept references to Spark obj
 <td>Get the Spark connection associated with objects of various types.</td>
 </tr>
 <tr class="even">
-<td>sparkapi_jobj</td>
-<td>Get the Spark jobj associated with objects of various types.</td>
+<td>sparkapi_spark_context</td>
+<td>Get the SparkContext for a <code>sparkapi_connection</code></td>
 </tr>
 <tr class="odd">
-<td>sparkapi_dataframe</td>
-<td>Get a reference to a Spark DataFrame from objects of various types.</td>
+<td>sparkapi_hive__context</td>
+<td>Get the HiveContext for a <code>sparkapi_connection</code></td>
+</tr>
+<tr class="even">
+<td>sparkapi_jobj</td>
+<td>Get the Spark jobj associated with objects of various types.</td>
 </tr>
 </tbody>
 </table>
@@ -108,8 +108,8 @@ The use of these functions is illustrated in this (overly) simple example:
 ``` r
 analyze <- function(x, features) {
   
-  # normalize whatever we were passed (e.g. a dplyr tbl) into a Spark DataFrame
-  df <- sparkapi_dataframe(x)
+  # normalize whatever we were passed (e.g. a dplyr tbl) into a Spark jobj
+  df <- sparkapi_jobj(x)
   
   # get the underlying connection so we can create new objects
   sc <- sparkapi_connection(df)
@@ -126,9 +126,9 @@ analyze <- function(x, features) {
 }
 ```
 
-The first argument is an object that can be accessed using the Spark DataFrame API (this might be an actual reference to a DataFrame or could rather be a dplyr `tbl` which has a DataFrame reference inside it). After using the `sparkapi_dataframe` function to normalize the reference, we call `sparkapi_connection` to extract the underlying Spark connection associated with the data frame. Finally, we create a new `Analyzer` object, call it's `analyze` method with the DataFrame and list of features, and then call the `summary` method on the results of the analysis.
+The first argument is an object that can be accessed using the Spark DataFrame API (this might be an actual reference to a DataFrame or could rather be a dplyr `tbl` which has a DataFrame reference inside it). After using the `sparkapi_jobj` function to normalize the reference, we call `sparkapi_connection` to extract the underlying Spark connection associated with the data frame. Finally, we create a new `Analyzer` object, call it's `analyze` method with the DataFrame and list of features, and then call the `summary` method on the results of the analysis.
 
-Accepting a DataFrame as the first argument of a function makes it very easy to incorporate into magrittr pipelines so this pattern is highly recommended when possible.
+Accepting a jobj (in this case a DataFrame) as the first argument of a function makes it very easy to incorporate into magrittr pipelines so this pattern is highly recommended when possible.
 
 Dependencies
 ------------
@@ -174,28 +174,3 @@ When users connect to a Spark cluster and want to use your extension package wit
 library(SparkR)
 sc <- sparkR.init(master = "local[*]", extensions = c("sparkds"))
 ```
-
-There are two helper functions which enable front end packages to discover and read Spark dependencies from extension packages as well as convert them into shell arguments suitable for passing to `spark-shell`:
-
-<table>
-<colgroup>
-<col width="38%" />
-<col width="61%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Function</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>sparkapi_dependencies_from_extension</td>
-<td>Query an extension package for it's list of sparkapi dependencies</td>
-</tr>
-<tr class="even">
-<td>sparkapi_dependencies_to_shellargs</td>
-<td>Convert a list of sparkapi dependencies into shell arguments.</td>
-</tr>
-</tbody>
-</table>
