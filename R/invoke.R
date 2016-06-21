@@ -30,6 +30,16 @@ sparkapi_invoke_new <- function(connection, class, ...)
 }
 
 
+#' Stop the RBackend that services RPC request
+#'
+#' @param connection Connection to stop the backend for
+#'
+#' @export
+sparkapi_stop_backend <- function(connection) {
+  sparkapi_invoke_method(connection, FALSE, "SparkRHandler", "stopBackend")
+}
+
+
 sparkapi_invoke_method <- function(connection, isStatic, objName, methodName, ...)
 {
   if (is.null(connection)) {
