@@ -20,6 +20,48 @@
 # References to objects that exist on the JVM backend
 # are maintained using the jobj.
 
+
+#' Get the sparkapi_jobj associated with an object
+#'
+#' S3 method to get the sparkapi_jobj associated with objects of
+#' various types.
+#'
+#' @param x Object to extract jobj from
+#' @param ... Reserved for future use
+#' @return A \code{sparkapi_jobj} object that can be passed to
+#'   \code{\link{sparkapi_invoke}}.
+#'
+#' @seealso \code{\link{sparkapi_invoke}}
+#'
+#' @export
+sparkapi_jobj <- function(x, ...) {
+  UseMethod("sparkapi_jobj")
+}
+
+
+#' @export
+sparkapi_jobj.default <- function(x, ...) {
+  stop("Unable to retreive a sparkapi_jobj from object of class ",
+       class(x), call. = FALSE)
+}
+
+#' @export
+sparkapi_jobj.sparkapi_jobj <- function(x, ...) {
+  x
+}
+
+#' @export
+print.sparkapi_jobj <- function(x, ...) {
+  if (sparkapi_connection_is_open(sparkapi_connection(x))) {
+    info <- jobj_info(x)
+    fmt <- "<jobj[%s]>\n  %s\n  %s\n"
+    cat(sprintf(fmt, x$id, info$class, info$repr))
+  } else {
+    fmt <- "<jobj[%s]>\n  <detached>"
+    cat(sprintf(fmt, x$id))
+  }
+}
+
 # Maintain a reference count of Java object references
 # This allows us to GC the java object when it is safe
 .validJobjs <- new.env(parent = emptyenv())
@@ -56,18 +98,6 @@ jobj_create <- function(objId) {
   # is garbage collected in R
   reg.finalizer(obj, cleanup.jobj)
   obj
-}
-
-#' @export
-print.sparkapi_jobj <- function(x, ...) {
-  if (sparkapi_connection_is_open(sparkapi_connection(x))) {
-    info <- jobj_info(x)
-    fmt <- "<jobj[%s]>\n  %s\n  %s\n"
-    cat(sprintf(fmt, x$id, info$class, info$repr))
-  } else {
-    fmt <- "<jobj[%s]>\n  <detached>"
-    cat(sprintf(fmt, x$id))
-  }
 }
 
 jobj_info <- function(jobj) {
