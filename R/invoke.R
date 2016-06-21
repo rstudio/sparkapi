@@ -10,7 +10,11 @@
 #' @export
 sparkapi_invoke <- function (jobj, method, ...)
 {
-  sparkapi_invoke_method(sparkapi_connection(jobj), FALSE, jobj$id, method, ...)
+  sparkapi_invoke_method(sparkapi_connection(jobj),
+                         FALSE,
+                         jobj$id,
+                         method,
+                         ...)
 }
 
 
@@ -18,7 +22,11 @@ sparkapi_invoke <- function (jobj, method, ...)
 #' @export
 sparkapi_invoke_static <- function (connection, class, method, ...)
 {
-  sparkapi_invoke_method(connection, TRUE, class, method, ...)
+  sparkapi_invoke_method(sparkapi_connection(connection),
+                         TRUE,
+                         class,
+                         method,
+                         ...)
 }
 
 
@@ -26,7 +34,11 @@ sparkapi_invoke_static <- function (connection, class, method, ...)
 #' @export
 sparkapi_invoke_new <- function(connection, class, ...)
 {
-  sparkapi_invoke_method(connection, TRUE, class, "<init>", ...)
+  sparkapi_invoke_method(sparkapi_connection(connection),
+                         TRUE,
+                         class,
+                         "<init>",
+                         ...)
 }
 
 
@@ -36,7 +48,10 @@ sparkapi_invoke_new <- function(connection, class, ...)
 #'
 #' @export
 sparkapi_stop_backend <- function(connection) {
-  sparkapi_invoke_method(connection, FALSE, "SparkRHandler", "stopBackend")
+  sparkapi_invoke_method(sparkapi_connection(connection),
+                         FALSE,
+                         "SparkRHandler",
+                         "stopBackend")
 }
 
 

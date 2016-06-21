@@ -10,6 +10,7 @@
 #' \code{\link{sparkapi_invoke_new}} and \code{\link{sparkapi_invoke_static}}
 #' functions.
 #'
+#' @param spark_context Instance of SparkContext object
 #' @param backend R socket connection to backend
 #' @param monitor R socket connection for monitor
 #'
@@ -18,12 +19,27 @@
 #' @seealso \code{\link{sparkapi_connection}}
 #'
 #' @export
-sparkapi_connection_create <- function(backend, monitor) {
+sparkapi_connection_create <- function(spark_context, backend, monitor) {
   structure(class = "sparkapi_connection", list(
+    spark_context = spark_context,
     backend = backend,
     monitor = monitor
   ))
 }
+
+#' Get the SparkContext associated with a connection
+#'
+#' Get the SparkContext \code{spark_jobj} associated with a
+#' \code{sparkapi_connection}
+#'
+#' @param connection Connection to get SparkContext from
+#'
+#' @return Reference to SparkContext
+#' @export
+sparkapi_spark_context <- function(connection) {
+  sparkapi_connection(connection)$spark_context
+}
+
 
 #' Get the sparkapi_connection associated with an object
 #'

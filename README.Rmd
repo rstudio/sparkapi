@@ -64,18 +64,20 @@ Here's an example of a wrapper function for the the text file line counting func
 
 ```{r}
 count_lines <- function(sc, path) {
-  sc %>% sparkapi_invoke("textFile", path, as.integer(1)) %>% 
-    sparkapi_invoke("count")
+  sparkapi_spark_context(sc) %>% 
+    sparkapi_invoke("textFile", path, as.integer(1)) %>% 
+      sparkapi_invoke("count")
 }
 ```
 
-The `count_lines` function takes a `sparkapi_connection` (`sc`) argument, which when passed to `sparkapi_invoke` enables executing methods of the SparkContext object. Creating new objects also requires the `sc` argument.
+The `count_lines` function takes a `sparkapi_connection` (`sc`) argument which enables it to obtain a reference to the `SparkContext` object. Creating new objects also requires the `sc` argument.
 
 In some cases you'll write wrapper functions that accept references to Spark objects (for example, a Spark DataFrame). In this scenario the following functions are also useful:
 
 | Function | Description  |
 |----------------------------|---------------------------------------------|
 | sparkapi_connection | Get the Spark connection associated with objects of various types. |
+| sparkapi\_spark\_context | Get the SparkContext for a `sparkapi_connection` |
 | sparkapi_jobj | Get the Spark jobj associated with objects of various types. |
 
 The use of these functions is illustrated in this (overly) simple example:
