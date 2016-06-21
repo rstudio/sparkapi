@@ -46,6 +46,8 @@ sparkapi_invoke_new <- function(connection, class, ...)
 #'
 #' @param connection Connection to stop the backend for
 #'
+#' @keywords internal
+#'
 #' @export
 sparkapi_stop_backend <- function(connection) {
   sparkapi_invoke_method(sparkapi_connection(connection),

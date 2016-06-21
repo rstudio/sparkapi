@@ -12,4 +12,5 @@ sparkapi_stop_backend(connection)
 \description{
 Stop the RBackend that services RPC request
 }
+\keyword{internal}
 

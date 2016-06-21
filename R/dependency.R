@@ -27,6 +27,7 @@ sparkapi_dependency <- function(jars, packages) {
 #'
 #' @return List of objects of type \code{spark_dependency}.
 #'
+#' @keywords internal
 #' @rdname sparkapi_dependencies
 #'
 #' @export

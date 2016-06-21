@@ -105,6 +105,8 @@ sparkapi_connection.sparkapi_jobj <- function(x, ...) {
 #' @return List with \code{backendPort}, \code{monitorPort}, and
 #'   \code{rLibraryPath}
 #'
+#' @keywords internal
+#'
 #' @export
 sparkapi_read_shell_file <- function(shell_file) {
 

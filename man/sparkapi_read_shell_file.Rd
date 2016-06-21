@@ -17,4 +17,5 @@ List with \code{backendPort}, \code{monitorPort}, and
 Read the shell file and extract the backend port, monitor port,
 and R library path.
 }
+\keyword{internal}
 

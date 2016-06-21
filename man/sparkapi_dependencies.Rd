@@ -24,4 +24,5 @@ List of objects of type \code{spark_dependency}.
 Call the \code{sparkapi_dependencies} function of the specified
 package to extract it's dependencies.
 }
+\keyword{internal}
 
