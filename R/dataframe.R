@@ -8,18 +8,18 @@
 #' @return Reference to DataFrame
 #'
 #' @export
-spark_dataframe <- function(x, ...) {
-  UseMethod("spark_dataframe")
+sparkapi_dataframe <- function(x, ...) {
+  UseMethod("sparkapi_dataframe")
 }
 
 #' @export
-spark_dataframe.default <- function(x, ...) {
+sparkapi_dataframe.default <- function(x, ...) {
   stop("Unable to retreive a Spark DataFrame from object of class ",
        class(x), call. = FALSE)
 }
 
 #' @export
-spark_dataframe.sparkapi_jobj <- function(x, ...) {
+sparkapi_dataframe.sparkapi_jobj <- function(x, ...) {
   x
 }
 
