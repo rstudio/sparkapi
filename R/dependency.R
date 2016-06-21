@@ -43,7 +43,14 @@ sparkapi_dependencies_from_extension <- function(config, extension) {
   )
 
   # call the function
-  sparkapi_dependencies(config)
+  dependency <- sparkapi_dependencies(config)
+
+  # if it's just a single dependency then wrap it in a list
+  if (inherits(dependency, "sparkapi_dependency"))
+    dependency <- list(dependency)
+
+  # return it
+  dependency
 }
 
 
