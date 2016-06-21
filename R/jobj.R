@@ -42,7 +42,7 @@ sparkapi_jobj <- function(x, ...) {
 #' @export
 sparkapi_jobj.default <- function(x, ...) {
   stop("Unable to retreive a sparkapi_jobj from object of class ",
-       class(x), call. = FALSE)
+       paste(class(x), collapse = " "), call. = FALSE)
 }
 
 #' @export

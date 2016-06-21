@@ -81,7 +81,7 @@ sparkapi_connection <- function(x, ...) {
 #' @export
 sparkapi_connection.default <- function(x, ...) {
   stop("Unable to retreive a sparkapi_connection from object of class ",
-       class(x), call. = FALSE)
+       paste(class(x), collapse = " "), call. = FALSE)
 }
 
 #' @export

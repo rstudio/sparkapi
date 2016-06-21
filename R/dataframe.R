@@ -15,7 +15,7 @@ sparkapi_dataframe <- function(x, ...) {
 #' @export
 sparkapi_dataframe.default <- function(x, ...) {
   stop("Unable to retreive a Spark DataFrame from object of class ",
-       class(x), call. = FALSE)
+       paste(class(x), collapse = " "), call. = FALSE)
 }
 
 #' @export
