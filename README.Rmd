@@ -7,10 +7,6 @@ output: github_document
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
-<!---
-// TODO: sparkapi_dataframe
---->
-
 ## Introduction
 
 The [SparkR](https://github.com/apache/spark/tree/master/R) package introduced a custom RPC method for communicating between R and the JVM. This allows for calling arbitrary Java/Scala code from R without the use of the rJava package. 
@@ -81,15 +77,14 @@ In some cases you'll write wrapper functions that accept references to Spark obj
 |----------------------------|---------------------------------------------|
 | sparkapi_connection | Get the Spark connection associated with objects of various types. |
 | sparkapi_jobj | Get the Spark jobj associated with objects of various types. |
-| sparkapi_dataframe | Get a reference to a Spark DataFrame from objects of various types. |
 
 The use of these functions is illustrated in this (overly) simple example:
 
 ```{r}
 analyze <- function(x, features) {
   
-  # normalize whatever we were passed (e.g. a dplyr tbl) into a Spark DataFrame
-  df <- sparkapi_dataframe(x)
+  # normalize whatever we were passed (e.g. a dplyr tbl) into a Spark jobj
+  df <- sparkapi_jobj(x)
   
   # get the underlying connection so we can create new objects
   sc <- sparkapi_connection(df)
@@ -106,9 +101,9 @@ analyze <- function(x, features) {
 }
 ```
 
-The first argument is an object that can be accessed using the Spark DataFrame API (this might be an actual reference to a DataFrame or could rather be a dplyr `tbl` which has a DataFrame reference inside it). After using the `sparkapi_dataframe` function to normalize the reference, we call `sparkapi_connection` to extract the underlying Spark connection associated with the data frame. Finally, we create a new `Analyzer` object, call it's `analyze` method with the DataFrame and list of features, and then call the `summary` method on the results of the analysis.
+The first argument is an object that can be accessed using the Spark DataFrame API (this might be an actual reference to a DataFrame or could rather be a dplyr `tbl` which has a DataFrame reference inside it). After using the `sparkapi_jobj` function to normalize the reference, we call `sparkapi_connection` to extract the underlying Spark connection associated with the data frame. Finally, we create a new `Analyzer` object, call it's `analyze` method with the DataFrame and list of features, and then call the `summary` method on the results of the analysis.
 
-Accepting a DataFrame as the first argument of a function makes it very easy to incorporate into magrittr pipelines so this pattern is highly recommended when possible.
+Accepting a jobj (in this case a DataFrame) as the first argument of a function makes it very easy to incorporate into magrittr pipelines so this pattern is highly recommended when possible.
 
 ## Dependencies
 

@@ -9,7 +9,8 @@ Authors@R: c(
   person("JJ", "Allaire", role = "aut", email = "jj@rstudio.com"),
   person(family = "RStudio", role = c("cph")))
 Imports:
-  utils
+  utils,
+  magrittr
 Suggests:
   testthat
 Description: Low-level socket-based interface to calling the Spark API via the
