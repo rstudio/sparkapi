@@ -174,3 +174,28 @@ When users connect to a Spark cluster and want to use your extension package wit
 library(SparkR)
 sc <- sparkR.init(master = "local[*]", extensions = c("sparkds"))
 ```
+
+There are two helper functions which enable front end packages to discover and read Spark dependencies from extension packages as well as convert them into shell arguments suitable for passing to `spark-shell`:
+
+<table>
+<colgroup>
+<col width="38%" />
+<col width="61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sparkapi_dependencies_from_extension</td>
+<td>Query an extension package for it's list of sparkapi dependencies</td>
+</tr>
+<tr class="even">
+<td>sparkapi_dependencies_to_shellargs</td>
+<td>Convert a list of sparkapi dependencies into shell arguments.</td>
+</tr>
+</tbody>
+</table>

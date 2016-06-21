@@ -8,9 +8,7 @@ knitr::opts_chunk$set(eval = FALSE)
 ```
 
 <!---
-// TODO: sparkapi_dependency
 // TODO: sparkapi_dataframe
-// TODO: magrittr re-export
 --->
 
 ## Introduction
@@ -19,7 +17,7 @@ The [SparkR](https://github.com/apache/spark/tree/master/R) package introduced a
 
 The **sparkapi** package factors out the core RPC protocol from SparkR, providing a mechanism for additional front-end packages (e.g. a dplyr-interface) to use the same protocol as well as extension packages to be written that support multiple front-end packages.
 
-To goal of the **sparkapi** package is to make the core types used by Spark front-end packages interoperable, enabling a constellation of R packages that provide interfaces between R and Spark, all of which work well together.
+To goal of the **sparkapi** package is to make the core types used by Spark front-end packages interoperable, enabling the creation of extension packages that work well with each other as well as all front-end packages.
 
 ## Core Types
 
@@ -140,7 +138,6 @@ When users connect to a Spark cluster and want to use your extension package wit
 library(SparkR)
 sc <- sparkR.init(master = "local[*]", extensions = c("sparkds"))
 ```
-
 
 
 
