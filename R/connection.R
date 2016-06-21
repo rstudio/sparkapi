@@ -59,6 +59,39 @@ sparkapi_connection.sparkapi_jobj <- function(x, ...) {
 }
 
 
+#' Read the shell file from the Spark R Backend
+#'
+#' Read the shell file and extract the backend port, monitor port,
+#' and R library path.
+#'
+#' @param shell_file Shell file to read
+#'
+#' @return List with \code{backendPort}, \code{monitorPort}, and
+#'   \code{rLibraryPath}
+#'
+#' @export
+sparkapi_read_shell_file <- function(shell_file) {
+
+  shellOutputFile <- file(shell_file, open = "rb")
+  backendPort <- readInt(shellOutputFile)
+  monitorPort <- readInt(shellOutputFile)
+  rLibraryPath <- readString(shellOutputFile)
+  close(shellOutputFile)
+
+  success <- length(backendPort) > 0 && backendPort > 0 &&
+    length(monitorPort) > 0 && monitorPort > 0 &&
+    length(rLibraryPath) == 1
+
+  if (!success)
+    stop("Invalid values found in shell output")
+
+  list(
+    backendPort = backendPort,
+    monitorPort = monitorPort,
+    rLibraryPath = rLibraryPath
+  )
+}
+
 
 sparkapi_connection_is_open <- function(connection) {
   bothOpen <- FALSE
