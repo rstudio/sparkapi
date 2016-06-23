@@ -1,5 +1,13 @@
 
-#' @importFrom magrittr %>%
+#' Pipe operator
+#'
+#' See \code{\link[magrittr]{\%>\%}} for more details.
+#'
+#' @name %>%
+#' @rdname pipe
+#' @keywords internal
 #' @export
-magrittr::`%>%`
+#' @importFrom magrittr %>%
+#' @usage lhs \%>\% rhs
+NULL
 
