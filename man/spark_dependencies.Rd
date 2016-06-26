@@ -6,13 +6,11 @@
 \alias{spark_dependencies_from_extensions}
 \title{Get the spark dependencies for extension packages}
 \usage{
-spark_dependencies_from_extension(config, extension)
+spark_dependencies_from_extension(extension)
 
-spark_dependencies_from_extensions(config, extensions)
+spark_dependencies_from_extensions(extensions)
 }
 \arguments{
-\item{config}{R list containing configuration data}
-
 \item{extension}{Name of extension package}
 
 \item{extensions}{Names of extension packages.}
