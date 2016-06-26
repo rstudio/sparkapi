@@ -21,38 +21,38 @@
 # are maintained using the jobj.
 
 
-#' Get the sparkapi_jobj associated with an object
+#' Get the spark_jobj associated with an object
 #'
-#' S3 method to get the sparkapi_jobj associated with objects of
+#' S3 method to get the spark_jobj associated with objects of
 #' various types.
 #'
 #' @param x Object to extract jobj from
 #' @param ... Reserved for future use
-#' @return A \code{sparkapi_jobj} object that can be passed to
-#'   \code{\link{sparkapi_invoke}}.
+#' @return A \code{spark_jobj} object that can be passed to
+#'   \code{\link{invoke}}.
 #'
-#' @seealso \code{\link{sparkapi_invoke}}
+#' @seealso \code{\link{invoke}}
 #'
 #' @export
-sparkapi_jobj <- function(x, ...) {
-  UseMethod("sparkapi_jobj")
+spark_jobj <- function(x, ...) {
+  UseMethod("spark_jobj")
 }
 
 
 #' @export
-sparkapi_jobj.default <- function(x, ...) {
-  stop("Unable to retreive a sparkapi_jobj from object of class ",
+spark_jobj.default <- function(x, ...) {
+  stop("Unable to retreive a spark_jobj from object of class ",
        paste(class(x), collapse = " "), call. = FALSE)
 }
 
 #' @export
-sparkapi_jobj.sparkapi_jobj <- function(x, ...) {
+spark_jobj.spark_jobj <- function(x, ...) {
   x
 }
 
 #' @export
-print.sparkapi_jobj <- function(x, ...) {
-  if (sparkapi_connection_is_open(sparkapi_connection(x))) {
+print.spark_jobj <- function(x, ...) {
+  if (spark_connection_is_open(spark_connection(x))) {
     info <- jobj_info(x)
     fmt <- "<jobj[%s]>\n  %s\n  %s\n"
     cat(sprintf(fmt, x$id, info$class, info$repr))
@@ -91,7 +91,7 @@ jobj_create <- function(objId) {
   }
   # NOTE: We need a new env for a jobj as we can only register
   # finalizers for environments or external references pointers.
-  obj <- structure(new.env(parent = emptyenv()), class = "sparkapi_jobj")
+  obj <- structure(new.env(parent = emptyenv()), class = "spark_jobj")
   obj$id <- objId
 
   # Register a finalizer to remove the Java object when this reference
@@ -101,20 +101,20 @@ jobj_create <- function(objId) {
 }
 
 jobj_info <- function(jobj) {
-  if (!inherits(jobj, "sparkapi_jobj"))
+  if (!inherits(jobj, "spark_jobj"))
     stop("'jobj_info' called on non-jobj")
 
   class <- NULL
   repr <- NULL
 
   tryCatch({
-    class <- sparkapi_invoke(jobj, "getClass")
-    if (inherits(class, "sparkapi_jobj"))
-      class <- sparkapi_invoke(class, "toString")
+    class <- invoke(jobj, "getClass")
+    if (inherits(class, "spark_jobj"))
+      class <- invoke(class, "toString")
   }, error = function(e) {
   })
   tryCatch({
-    repr <- sparkapi_invoke(jobj, "toString")
+    repr <- invoke(jobj, "toString")
   }, error = function(e) {
   })
   list(
@@ -125,17 +125,17 @@ jobj_info <- function(jobj) {
 
 jobj_inspect <- function(jobj) {
   print(jobj)
-  if (!sparkapi_connection_is_open(sparkapi_connection(jobj)))
+  if (!spark_connection_is_open(spark_connection(jobj)))
     return(jobj)
 
-  class <- sparkapi_invoke(jobj, "getClass")
+  class <- invoke(jobj, "getClass")
 
   cat("Fields:\n")
-  fields <- sparkapi_invoke(class, "getDeclaredFields")
+  fields <- invoke(class, "getDeclaredFields")
   lapply(fields, function(field) { print(field) })
 
   cat("Methods:\n")
-  methods <- sparkapi_invoke(class, "getDeclaredMethods")
+  methods <- invoke(class, "getDeclaredMethods")
   lapply(methods, function(method) { print(method) })
 
   jobj
