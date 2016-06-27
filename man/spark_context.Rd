@@ -4,10 +4,10 @@
 \alias{spark_context}
 \title{Get the SparkContext associated with a connection}
 \usage{
-spark_context(connection)
+spark_context(sc)
 }
 \arguments{
-\item{connection}{Connection to get SparkContext from}
+\item{sc}{Connection to get SparkContext from}
 }
 \value{
 Reference to SparkContext

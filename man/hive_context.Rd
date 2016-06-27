@@ -4,10 +4,10 @@
 \alias{hive_context}
 \title{Get the HiveContext associated with a connection}
 \usage{
-hive_context(connection)
+hive_context(sc)
 }
 \arguments{
-\item{connection}{Connection to get HiveContext from}
+\item{sc}{Connection to get HiveContext from}
 }
 \value{
 Reference to HiveContext
