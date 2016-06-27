@@ -15,7 +15,7 @@ Extension Packages
 
 Spark extension packages are add-on R packages that implement R interfaces for Spark services.
 
-Extension packages consist of R functions which don't themselves connect directly to Spark, but rather depend on a connection already made by SparkR or another front-end package (the `spark_connection` object described below).
+Extension packages consist of R functions which don't themselves connect directly to Spark, but rather depend on a connection already made by SparkR or another front-end package.
 
 Front-end packages also typically have facilities for accessing, filtering, and manipulating Spark data frames. Extension packages can also leverage these capabilities by accepting a `spark_dataframe` object created by a front-end package as an argument.
 
