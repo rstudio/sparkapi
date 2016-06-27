@@ -13,11 +13,11 @@ The **sparkapi** package factors out the core RPC protocol from SparkR, with the
 Extension Packages
 ------------------
 
-Spark extension packages are add-on R packages that implement custom R front ends for Spark services.
+Spark extension packages are add-on R packages that implement R interfaces for Spark services.
 
 Extension packages consist of R functions which don't themselves connect directly to Spark, but rather depend on a connection already made by SparkR or another front-end package (the `spark_connection` object described below).
 
-Front-end packages also typically have extensive facilities for accessing, filtering, and manipulating Spark data frames. Extension packages can also leverage these capabilities by accepting a `spark_dataframe` object created by a front-end package as an argument.
+Front-end packages also typically have facilities for accessing, filtering, and manipulating Spark data frames. Extension packages can also leverage these capabilities by accepting a `spark_dataframe` object created by a front-end package as an argument.
 
 The following sections describe the core mechanism uses to invoke the Spark API from within R. Following that, some simple examples of R functions that might be included in an extension package are provided.
 
@@ -32,7 +32,7 @@ The sparkapi package defines 3 classes for representing the fundamental types of
 | spark\_jobj       | Instance of a remote Spark object                |
 | spark\_dataframe  | Instance of a remote Spark DataFrame object      |
 
-S3 methods are defined for each of these classes so they can be easily converted to from objects that contain or wrap them. Note that for any given `spark_jobj` it's possible to discover the underlying `spark_connection`.
+S3 methods are defined for each of these classes so they can be easily converted to / from objects that contain or wrap them. Note that for any given `spark_jobj` it's possible to discover the underlying `spark_connection`.
 
 Calling Spark from R
 --------------------
