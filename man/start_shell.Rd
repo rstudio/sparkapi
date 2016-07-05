@@ -4,14 +4,10 @@
 \alias{start_shell}
 \title{Start the Spark R Shell}
 \usage{
-start_shell(spark_home, env = NULL, args = NULL, extensions = NULL)
+start_shell(spark_home, jars = NULL, packages = NULL, extensions = NULL,
+  environment = NULL, shell_args = NULL)
 }
 \arguments{
-\item{env}{character vector of name=value strings to set environment
-    variables.}
-
-\item{args}{a character vector of arguments to \command{command}.}
-
 \item{Extension}{packages to include dependencies for
 (see \code{\link{spark_dependency}}).}
 }

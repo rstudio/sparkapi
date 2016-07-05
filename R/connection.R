@@ -39,12 +39,12 @@ spark_connection_create <- function(spark_context,
 #' Get the SparkContext \code{spark_jobj} associated with a
 #' \code{spark_connection}
 #'
-#' @param connection Connection to get SparkContext from
+#' @param sc Connection to get SparkContext from
 #'
 #' @return Reference to SparkContext
 #' @export
-spark_context <- function(connection) {
-  spark_connection(connection)$spark_context
+spark_context <- function(sc) {
+  spark_connection(sc)$spark_context
 }
 
 #' Get the HiveContext associated with a connection
@@ -52,12 +52,12 @@ spark_context <- function(connection) {
 #' Get the HiveContext \code{spark_jobj} associated with a
 #' \code{spark_connection}
 #'
-#' @param connection Connection to get HiveContext from
+#' @param sc Connection to get HiveContext from
 #'
 #' @return Reference to HiveContext
 #' @export
-hive_context <- function(connection) {
-  spark_connection(connection)$hive_context
+hive_context <- function(sc) {
+  spark_connection(sc)$hive_context
 }
 
 
