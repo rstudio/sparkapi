@@ -2,16 +2,44 @@
 % Please edit documentation in R/shell.R
 \name{start_shell}
 \alias{start_shell}
+\alias{stop_shell}
 \title{Start the Spark R Shell}
 \usage{
-start_shell(spark_home, jars = NULL, packages = NULL, extensions = NULL,
-  environment = NULL, shell_args = NULL)
+start_shell(master, spark_home, app_name, config = NULL, jars = NULL,
+  packages = NULL, extensions = NULL, environment = NULL,
+  shell_args = NULL)
+
+stop_shell(sc)
 }
 \arguments{
-\item{Extension}{packages to include dependencies for
+\item{master}{Spark cluster url to connect to. Use \code{"local"} to connect to a local
+instance of Spark}
+
+\item{spark_home}{Path to Spark home directory}
+
+\item{app_name}{Application name to be used while running in the Spark cluster}
+
+\item{config}{Named character vector of spark.context.* options}
+
+\item{jars}{Paths to Jar files to include}
+
+\item{packages}{Spark packages to include}
+
+\item{extensions}{Extension packages to include dependencies for
 (see \code{\link{spark_dependency}}).}
+
+\item{environment}{Environment variables to set}
+
+\item{shell_args}{Additional command line arguments for spark_shell}
+
+\item{sc}{\code{spark_connection}}
+}
+\value{
+\code{spark_connection} object
 }
 \description{
 Start the Spark R Shell
+
+Stop the Spark R Shell
 }
 

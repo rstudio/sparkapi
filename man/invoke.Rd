@@ -8,9 +8,9 @@
 \usage{
 invoke(jobj, method, ...)
 
-invoke_static(connection, class, method, ...)
+invoke_static(sc, class, method, ...)
 
-invoke_new(connection, class, ...)
+invoke_new(sc, class, ...)
 }
 \arguments{
 \item{jobj}{Java object to execute method on.}
@@ -19,7 +19,7 @@ invoke_new(connection, class, ...)
 
 \item{...}{Unused (future expansion)}
 
-\item{connection}{Connection to execute on.}
+\item{sc}{\code{spark_connection} to execute on.}
 
 \item{class}{Class to execute static method on.}
 }

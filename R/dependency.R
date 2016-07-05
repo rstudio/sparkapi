@@ -16,20 +16,6 @@ spark_dependency <- function(jars, packages) {
   ))
 }
 
-#' Get the spark dependencies for extension packages
-#'
-#' Call the \code{spark_dependencies} function of the specified
-#' package to extract it's dependencies.
-#'
-#' @param extension Name of extension package
-#' @param extensions Names of extension packages.
-#'
-#' @return List of objects of type \code{spark_dependency}.
-#'
-#' @keywords internal
-#' @rdname spark_dependencies
-#'
-#' @export
 spark_dependencies_from_extension <- function(extension) {
 
   # attempt to find the function
@@ -54,8 +40,6 @@ spark_dependencies_from_extension <- function(extension) {
 }
 
 
-#' @name spark_dependencies
-#' @export
 spark_dependencies_from_extensions <- function(extensions) {
 
   jars <- character()

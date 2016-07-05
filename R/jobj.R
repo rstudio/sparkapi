@@ -52,15 +52,19 @@ spark_jobj.spark_jobj <- function(x, ...) {
 
 #' @export
 print.spark_jobj <- function(x, ...) {
-  if (spark_connection_is_open(spark_connection(x))) {
-    info <- jobj_info(x)
-    fmt <- "<jobj[%s]>\n  %s\n  %s\n"
-    cat(sprintf(fmt, x$id, info$class, info$repr))
-  } else {
-    fmt <- "<jobj[%s]>\n  <detached>"
-    cat(sprintf(fmt, x$id))
-  }
+  print_jobj(spark_connection(x), x, ...)
 }
+
+#' Generic method for print jobj for a connection type
+#'
+#' @param sc \code{spark_connection} (used for type dispatch)
+#' @param jobj Object to print
+#'
+#' @export
+print_jobj <- function(sc, jobj, ...) {
+  UseMethod("print_jobj")
+}
+
 
 # Maintain a reference count of Java object references
 # This allows us to GC the java object when it is safe

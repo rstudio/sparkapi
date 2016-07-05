@@ -19,7 +19,4 @@ A \code{spark_connection} object that can be passed to
 S3 method to get the spark_connection associated with objects of
 various types.
 }
-\seealso{
-\code{\link{spark_connection_create}}
-}
 

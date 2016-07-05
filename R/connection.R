@@ -1,38 +1,5 @@
 
 
-#' Create a spark_connection object.
-#'
-#' Create a \code{spark_connection} based on the specified backend
-#' and monitor sockets.
-#'
-#' @details
-#' This connection can be passed to the
-#' \code{\link{invoke_new}} and \code{\link{invoke_static}}
-#' functions.
-#'
-#' @param spark_context Instance of SparkContext object
-#' @param hive_context Instance of HiveContext object
-#' @param backend R socket connection to backend
-#' @param monitor R socket connection for monitor
-#'
-#' @return Object of class \code{spark_connection}.
-#'
-#' @seealso \code{\link{spark_connection}}
-#'
-#' @keywords internal
-#'
-#' @export
-spark_connection_create <- function(spark_context,
-                                    hive_context,
-                                    backend,
-                                    monitor) {
-  structure(class = "spark_connection", list(
-    spark_context = spark_context,
-    hive_context = hive_context,
-    backend = backend,
-    monitor = monitor
-  ))
-}
 
 #' Get the SparkContext associated with a connection
 #'
@@ -47,19 +14,6 @@ spark_context <- function(sc) {
   spark_connection(sc)$spark_context
 }
 
-#' Get the HiveContext associated with a connection
-#'
-#' Get the HiveContext \code{spark_jobj} associated with a
-#' \code{spark_connection}
-#'
-#' @param sc Connection to get HiveContext from
-#'
-#' @return Reference to HiveContext
-#' @export
-hive_context <- function(sc) {
-  spark_connection(sc)$hive_context
-}
-
 
 #' Get the spark_connection associated with an object
 #'
@@ -70,8 +24,6 @@ hive_context <- function(sc) {
 #' @param ... Reserved for future use
 #' @return A \code{spark_connection} object that can be passed to
 #'   \code{\link{invoke_new}} and \code{\link{invoke_static}}.
-#'
-#' @seealso \code{\link{spark_connection_create}}
 #'
 #' @export
 spark_connection <- function(x, ...) {
@@ -94,56 +46,114 @@ spark_connection.spark_jobj <- function(x, ...) {
   x$connection
 }
 
-
-#' Read the shell file from the Spark R Backend
+#' Check whether the connection is open
 #'
-#' Read the shell file and extract the backend port, monitor port,
-#' and R library path.
-#'
-#' @param shell_file Shell file to read
-#'
-#' @return List with \code{backendPort}, \code{monitorPort}, and
-#'   \code{rLibraryPath}
-#'
-#' @keywords internal
+#' @param sc \code{spark_connection}
 #'
 #' @export
-read_shell_file <- function(shell_file) {
+spark_connection_is_open <- function(sc) {
+  UseMethod("spark_connection_is_open")
+}
 
-  shellOutputFile <- file(shell_file, open = "rb")
-  backendPort <- readInt(shellOutputFile)
-  monitorPort <- readInt(shellOutputFile)
-  rLibraryPath <- readString(shellOutputFile)
-  close(shellOutputFile)
+#' Read spark configuration values for a connection
+#'
+#' @param config List with configuration values
+#' @param master Master node
+#' @param prefix Optional prefix to read parameters for
+#'   (e.g. \code{spark.context.}, \code{spark.sql.}, etc.)
+#'
+#' @return Named list of config parameters (note that if a prefix was
+#'  specified then the names will not include the prefix)
+#'
+#' @export
+spark_read_config <- function(config, master, prefix = NULL) {
 
-  success <- length(backendPort) > 0 && backendPort > 0 &&
-    length(monitorPort) > 0 && monitorPort > 0 &&
-    length(rLibraryPath) == 1
+  isLocal <- spark_master_is_local(master)
+  configNames <- Filter(function(e) {
+    found <- is.null(prefix) ||
+      (substring(e, 1, nchar(prefix)) == prefix)
 
-  if (!success)
-    stop("Invalid values found in shell output")
+    if (grepl("\\.local$", e) && !isLocal)
+      found <- FALSE
 
-  list(
-    backendPort = backendPort,
-    monitorPort = monitorPort,
-    rLibraryPath = rLibraryPath
-  )
+    if (grepl("\\.remote$", e) && isLocal)
+      found <- FALSE
+
+    found
+  }, names(config))
+
+  paramsNames <- lapply(configNames, function(configName) {
+    paramName <- substr(configName, nchar(prefix) + 1, nchar(configName))
+    paramName <- sub("(\\.local$)|(\\.remote$)", "", paramName, perl = TRUE)
+
+    paramName
+  })
+
+  params <- lapply(configNames, function(configName) {
+    config[[configName]]
+  })
+
+  names(params) <- paramsNames
+  params
+}
+
+spark_master_is_local <- function(master) {
+  grepl("^local(\\[[0-9\\*]*\\])?$", master, perl = TRUE)
 }
 
 
-spark_connection_is_open <- function(connection) {
-  bothOpen <- FALSE
-  if (!is.null(connection)) {
-    backend <- connection$backend
-    monitor <- connection$monitor
-
-    tryCatch({
-      bothOpen <- isOpen(backend) && isOpen(monitor)
-    }, error = function(e) {
-    })
-  }
-
-  bothOpen
+#' Retrieves entries from the Spark log
+#'
+#' @param sc \code{spark_connection}
+#' @param n Max number of log entries to retrieve (pass NULL to retrieve
+#'   all lines of the log)
+#'
+#' @return Character vector with last \code{n} lines of the Spark log
+#'   or for \code{spark_log_file} the full path to the log file.
+#'
+#' @export
+spark_log <- function(sc, n = 100) {
+  UseMethod("spark_log")
 }
+
+#' @export
+spark_log.default <- function(...) {
+  stop("Invalid class passed to spark_log")
+}
+
+#' @export
+print.spark_log <- function(x, ...) {
+  cat(x, sep = "\n")
+  cat("\n")
+}
+
+#' Open the Spark web interface
+#'
+#' @inheritParams spark_log
+#'
+#' @export
+spark_web <- function(sc) {
+  UseMethod("spark_web")
+}
+
+#' @export
+spark_web.default <- function(...) {
+  stop("Invalid class passed to spark_web")
+}
+
+
+#' @export
+print.spark_web_url <- function(x, ...) {
+  utils::browseURL(x)
+}
+
+
+
+
+
+
+
+
+
 
 
