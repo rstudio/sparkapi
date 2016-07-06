@@ -126,25 +126,8 @@ start_shell <- function(master,
     }
   }, onexit = TRUE)
 
-  # create the spark config
-  conf <- invoke_new(sc, "org.apache.spark.SparkConf")
-  conf <- invoke(conf, "setAppName", app_name)
-  conf <- invoke(conf, "setMaster", master)
-  conf <- invoke(conf, "setSparkHome", spark_home)
-  context_config <- read_config(config, master, "spark.context.")
-  lapply(names(context_config), function(param) {
-    conf <<- invoke(conf, "set", param, context_config[[param]])
-  })
-
-  # create the spark context
-  sc$spark_context <- invoke_new(
-    sc,
-    "org.apache.spark.SparkContext",
-    conf
-  )
-
-  # return the connection
-  sc
+  # initialize and return the connection
+  initialize_connection(sc)
 }
 
 

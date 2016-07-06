@@ -170,7 +170,28 @@ print.spark_web_url <- function(x, ...) {
 
 
 
+initialize_connection <- function(sc) {
 
+  # create the spark config
+  conf <- invoke_new(sc, "org.apache.spark.SparkConf")
+  conf <- invoke(conf, "setAppName", sc$app_name)
+  conf <- invoke(conf, "setMaster", sc$master)
+  conf <- invoke(conf, "setSparkHome", sc$spark_home)
+  context_config <- read_config(sc$config, sc$master, "spark.context.")
+  lapply(names(context_config), function(param) {
+    conf <<- invoke(conf, "set", param, context_config[[param]])
+  })
+
+  # create the spark context
+  sc$spark_context <- invoke_new(
+    sc,
+    "org.apache.spark.SparkContext",
+    conf
+  )
+
+  # return the modified connection
+  sc
+}
 
 
 
