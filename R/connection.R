@@ -57,6 +57,24 @@ connection_is_open <- function(sc) {
   UseMethod("connection_is_open")
 }
 
+
+#' Version of Spark for a connection
+#'
+#' @param sc \code{spark_connection}
+#'
+#' @export
+spark_version <- function(sc) {
+
+  # get the version
+  version <- invoke(spark_context(sc), "version")
+
+  # Get rid of -preview and other suffix variations
+  version <- gsub("([0-9]+\\.?)[^0-9\\.](.*)","\\1", version)
+
+  # return numeric version
+  numeric_version(version)
+}
+
 #' Read configuration values
 #'
 #' @param config List with configuration values
