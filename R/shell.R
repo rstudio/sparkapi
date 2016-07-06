@@ -109,7 +109,7 @@ start_shell <- function(master,
   # create the shell connection
   sc <- structure(class = c("spark_connection", "spark_shell_connection"), list(
     # spark_connection
-    master = gsub("local\\[(\\d+|\\*)\\]", "local", master),
+    master = master,
     spark_home = spark_home,
     app_name = app_name,
     config = config,
