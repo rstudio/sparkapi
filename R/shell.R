@@ -17,8 +17,8 @@
 #'
 #' @export
 start_shell <- function(master,
-                        spark_home,
-                        app_name,
+                        spark_home = Sys.getenv("SPARK_HOME"),
+                        app_name = "sparkapi",
                         config = NULL,
                         jars = NULL,
                         packages = NULL,
