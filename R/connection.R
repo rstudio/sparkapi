@@ -11,7 +11,20 @@
 #' @return Reference to SparkContext
 #' @export
 spark_context <- function(sc) {
-  spark_connection(sc)$spark_context
+  sc$spark_context
+}
+
+#' Get the HiveContext associated with a connection
+#'
+#' Get the HiveContext \code{spark_jobj} associated with a
+#' \code{spark_connection}
+#'
+#' @param sc Connection to get HiveContext from
+#'
+#' @return Reference to HiveContext
+#' @export
+hive_context <- function(sc) {
+  sc$hive_context
 }
 
 
@@ -127,7 +140,7 @@ spark_master_is_local <- function(master) {
 #' @param sc \code{spark_connection}
 #' @param n Max number of log entries to retrieve (pass NULL to retrieve
 #'   all lines of the log)
-#' @param Unused (reserved for future use)
+#' @param ... Unused (reserved for future use)
 #'
 #' @return Character vector with last \code{n} lines of the Spark log
 #'   or for \code{spark_log_file} the full path to the log file.
@@ -168,8 +181,6 @@ print.spark_web_url <- function(x, ...) {
   utils::browseURL(x)
 }
 
-
-
 initialize_connection <- function(sc) {
 
   # create the spark config
@@ -182,12 +193,17 @@ initialize_connection <- function(sc) {
     conf <<- invoke(conf, "set", param, context_config[[param]])
   })
 
-  # create the spark context
+  # create the spark context and assign the connection to it
   sc$spark_context <- invoke_new(
     sc,
     "org.apache.spark.SparkContext",
     conf
   )
+  sc$spark_context$connection <- sc
+
+  # create the hive context and assign the connection to it
+  sc$hive_context <- create_hive_context(sc)
+  sc$hive_context$connection <- sc
 
   # return the modified connection
   sc
