@@ -176,7 +176,7 @@ connection_is_open.spark_shell_connection <- function(sc) {
 }
 
 #' @export
-spark_log.spark_shell_connection <- function(sc, n = 100) {
+spark_log.spark_shell_connection <- function(sc, n = 100, ...) {
   log <- file(sc$output_file)
   lines <- readLines(log)
   close(log)
@@ -191,7 +191,7 @@ spark_log.spark_shell_connection <- function(sc, n = 100) {
 }
 
 #' @export
-spark_web.spark_shell_connection <- function(sc) {
+spark_web.spark_shell_connection <- function(sc, ...) {
 
   log <- file(sc$output_file)
   lines <- readLines(log)

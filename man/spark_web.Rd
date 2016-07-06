@@ -4,7 +4,7 @@
 \alias{spark_web}
 \title{Open the Spark web interface}
 \usage{
-spark_web(sc)
+spark_web(sc, ...)
 }
 \arguments{
 \item{sc}{\code{spark_connection}}

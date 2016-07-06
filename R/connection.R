@@ -109,17 +109,18 @@ spark_master_is_local <- function(master) {
 #' @param sc \code{spark_connection}
 #' @param n Max number of log entries to retrieve (pass NULL to retrieve
 #'   all lines of the log)
+#' @param Unused (reserved for future use)
 #'
 #' @return Character vector with last \code{n} lines of the Spark log
 #'   or for \code{spark_log_file} the full path to the log file.
 #'
 #' @export
-spark_log <- function(sc, n = 100) {
+spark_log <- function(sc, n = 100, ...) {
   UseMethod("spark_log")
 }
 
 #' @export
-spark_log.default <- function(...) {
+spark_log.default <- function(sc, n = 100, ...) {
   stop("Invalid class passed to spark_log")
 }
 
@@ -134,12 +135,12 @@ print.spark_log <- function(x, ...) {
 #' @inheritParams spark_log
 #'
 #' @export
-spark_web <- function(sc) {
+spark_web <- function(sc, ...) {
   UseMethod("spark_web")
 }
 
 #' @export
-spark_web.default <- function(...) {
+spark_web.default <- function(sc, ...) {
   stop("Invalid class passed to spark_web")
 }
 

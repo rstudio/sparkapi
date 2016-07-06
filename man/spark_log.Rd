@@ -4,13 +4,15 @@
 \alias{spark_log}
 \title{Retrieves entries from the Spark log}
 \usage{
-spark_log(sc, n = 100)
+spark_log(sc, n = 100, ...)
 }
 \arguments{
 \item{sc}{\code{spark_connection}}
 
 \item{n}{Max number of log entries to retrieve (pass NULL to retrieve
 all lines of the log)}
+
+\item{Unused}{(reserved for future use)}
 }
 \value{
 Character vector with last \code{n} lines of the Spark log
