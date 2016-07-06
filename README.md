@@ -6,18 +6,66 @@ Introduction
 
 The [SparkR](https://github.com/apache/spark/tree/master/R) package introduces a custom RPC method that allows calling arbitrary Java/Scala code within the Spark shell process from R. The SparkR package's higher level functions are in turn built upon this RPC layer.
 
-SparkR provides one front-end from R to Spark, however the development of other front-end packages is desirable (e.g. a front-end that package that is compatible with [dplyr](https://github.com/hadley/dplyr), which SparkR is not due to it's masking of many of dplyr's functions).
+SparkR provides one front-end from R to Spark, however the development of other front-end packages is desirable (e.g. a front-end that package that is compatible with [dplyr](https://github.com/hadley/dplyr), which SparkR is not due to it's masking of many of dplyr's functions). The [sparklyr](http://spark.rstudio.com) package is one example of an alternate front-end package for Spark.
 
-The **sparkapi** package factors out the core RPC protocol from SparkR, with the goal of making the core types used by Spark front-end packages inter-operable. This should in turn enable the creation of extension packages that work well with all front-end packages.
+The **sparkapi** package factors out the RPC protocol from SparkR, with the goal of making the core types used by Spark front-end packages inter-operable. The sparkapi package provides access to the [SparkContext](https://spark.apache.org/docs/1.6.2/api/java/org/apache/spark/SparkContext.html) and [HiveContext](https://spark.apache.org/docs/1.6.2/api/java/org/apache/spark/sql/hive/HiveContext.html) as well as enables calling the full Spark Scala API.
+
+There are two ways to use the sparkapi package:
+
+1.  **Standalone**. Establish a connection to Spark and call the Spark API. This mode provides a fairly low-level interface to Spark (just invoking arbitrary methods of the Spark API) and would typically be used by packages building full front-end interfaces to Spark (e.g. for data frame manipulation or distributed computation).
+
+2.  **Extension**. Write an extension for a front-end package. This would be desirable when you want to leverage the capabilities of a front-end package for e.g. data manipulation, then provide functions that take the results of that manipulation (e.g. a Spark DataFrame object) and perform further processing or analysis.
+
+The sparklyr package currently supports extensions written with the sparkapi package. We are hopeful that the SparkR package will also support extensions at some point soon.
+
+Standalone Usage
+----------------
+
+To use the sparkapi package in standalone mode, you establish a connection to Spark using the [start\_shell](http://spark.rstudio.com/reference/sparkapi/latest/start_shell.html) function, then access the SparkContext, HiveContext, or any other part of the Spark API as necessary. Here's an example of connecting to Spark and calling the text file line counting function available via the SparkContext:
+
+``` r
+library(sparkapi)
+
+# connect to spark shell
+sc <- start_shell(master = "local")
+
+# implement a function which counts the lines of a text file
+count_lines <- function(sc, file) {
+  spark_context(sc) %>% 
+    invoke("textFile", file, 1L) %>% 
+      invoke("count")
+}
+
+# call the function
+count_lines(sc, "hdfs://path/data.csv")
+
+# close the shell connection
+stop_shell(sc)
+```
+
+Note that the above example assumes that you have previously set the `SPARK_HOME` environment variable to the location of your Spark installation.
 
 Extension Packages
 ------------------
 
 Spark extension packages are add-on R packages that implement R interfaces for Spark services.
 
-Extension packages consist of R functions which don't themselves connect directly to Spark, but rather depend on a connection already made by SparkR or another front-end package.
+Extension packages consist of R functions which don't themselves connect directly to Spark, but rather depend on a connection already made by a front-end package like sparklyr. We can take the same `count_lines` function defined above and use it with a connection established via sparklyr. For example:
 
-Front-end packages also typically have facilities for accessing, filtering, and manipulating Spark data frames. Extension packages can also leverage these capabilities by accepting a `spark_dataframe` object created by a front-end package as an argument.
+``` r
+library(sparklyr)
+
+# connect to spark
+sc <- spark_connect(master = "local")
+
+# call the function we defined above 
+count_lines(sc, "hdfs://path/data.csv")
+
+# disconnect from spark
+spark_disconnect(sc)
+```
+
+You'd typically create an extension package in cases where you wanted your users to take advantage of sparklyr's functions for accessing, filtering, and manipulating Spark data frames, then pass the result of those transformations to your extension functions.
 
 The following sections describe the core mechanism uses to invoke the Spark API from within R. Following that, some simple examples of R functions that might be included in an extension package are provided.
 
@@ -52,7 +100,7 @@ billionBigInteger <- invoke_new(sc, "java.math.BigInteger", "1000000000")
 billion <- invoke(billionBigInteger, "longValue")
 ```
 
-Note the `sc` argument: that's the `spark_connection` object which is provided by the front-end package (e.g. SparkR).
+Note the `sc` argument: that's the `spark_connection` object which is provided by either a call to `spark_shell` or by a front-end package like sparklyr.
 
 The previous example can be re-written to be more compact and clear using [magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html) pipes:
 
@@ -76,12 +124,12 @@ Wrapper Functions
 
 Creating an extension typically consists of writing R wrapper functions for a set of Spark services. In this section we'll describe the typical form of these functions as well as how to handle special types like Spark DataFrames.
 
-Here's an example of a wrapper function for the the text file line counting function available from the SparkContext object:
+Let's take another look at the text file line counting function we created earlier:
 
 ``` r
-count_lines <- function(sc, path) {
+count_lines <- function(sc, file) {
   spark_context(sc) %>% 
-    invoke("textFile", path, as.integer(1)) %>% 
+    invoke("textFile", file, 1L) %>% 
       invoke("count")
 }
 ```
@@ -165,9 +213,9 @@ spark_dependencies <- function(...) {
 
 The `...` argument is unused but nevertheless should be included to ensure compatibility if new arguments are added to `spark_dependencies` in the future.
 
-When users connect to a Spark cluster and want to use your extension package within their session they simply include the **sparkds** package in a list of extensions passed to e.g. `SparkR.init`:
+When users connect to a Spark cluster and want to use your extension package within their session they simply include the **sparkds** package in a list of extensions passed to e.g. `start_shell` or `spark_connect`:
 
 ``` r
-library(SparkR)
-sc <- sparkR.init(master = "local", extensions = c("sparkds"))
+library(sparklyr)
+sc <- spark_connect(master = "local", extensions = c("sparkds"))
 ```
