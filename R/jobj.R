@@ -60,6 +60,8 @@ print.spark_jobj <- function(x, ...) {
 #' @param sc \code{spark_connection} (used for type dispatch)
 #' @param jobj Object to print
 #'
+#' @keywords internal
+#'
 #' @export
 print_jobj <- function(sc, jobj, ...) {
   UseMethod("print_jobj")
@@ -129,7 +131,7 @@ jobj_info <- function(jobj) {
 
 jobj_inspect <- function(jobj) {
   print(jobj)
-  if (!spark_connection_is_open(spark_connection(jobj)))
+  if (!connection_is_open(spark_connection(jobj)))
     return(jobj)
 
   class <- invoke(jobj, "getClass")

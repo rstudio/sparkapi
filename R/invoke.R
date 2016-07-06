@@ -51,6 +51,8 @@ invoke_new <- function(sc, class, ...)
 #' @param method Name of method
 #' @param ... Call parameters
 #'
+#' @keywords internal
+#'
 #' @export
 invoke_method <- function(sc, static, object, method, ...) {
   UseMethod("invoke_method")

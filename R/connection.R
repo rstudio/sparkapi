@@ -50,12 +50,14 @@ spark_connection.spark_jobj <- function(x, ...) {
 #'
 #' @param sc \code{spark_connection}
 #'
+#' @keywords internal
+#'
 #' @export
-spark_connection_is_open <- function(sc) {
-  UseMethod("spark_connection_is_open")
+connection_is_open <- function(sc) {
+  UseMethod("connection_is_open")
 }
 
-#' Read spark configuration values for a connection
+#' Read configuration values
 #'
 #' @param config List with configuration values
 #' @param master Master node
@@ -66,7 +68,7 @@ spark_connection_is_open <- function(sc) {
 #'  specified then the names will not include the prefix)
 #'
 #' @export
-spark_read_config <- function(config, master, prefix = NULL) {
+read_config <- function(config, master, prefix = NULL) {
 
   isLocal <- spark_master_is_local(master)
   configNames <- Filter(function(e) {

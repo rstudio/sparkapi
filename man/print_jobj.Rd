@@ -14,4 +14,5 @@ print_jobj(sc, jobj, ...)
 \description{
 Generic method for print jobj for a connection type
 }
+\keyword{internal}
 

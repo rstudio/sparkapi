@@ -121,7 +121,7 @@ start_shell <- function(master,
 
   # stop shell on R exit
   reg.finalizer(baseenv(), function(x) {
-    if (spark_connection_is_open(sc)) {
+    if (connection_is_open(sc)) {
       stop_shell(sc)
     }
   }, onexit = TRUE)
@@ -131,7 +131,7 @@ start_shell <- function(master,
   conf <- invoke(conf, "setAppName", app_name)
   conf <- invoke(conf, "setMaster", master)
   conf <- invoke(conf, "setSparkHome", spark_home)
-  context_config <- spark_read_config(config, master, "spark.context.")
+  context_config <- read_config(config, master, "spark.context.")
   lapply(names(context_config), function(param) {
     conf <<- invoke(conf, "set", param, context_config[[param]])
   })
@@ -164,7 +164,7 @@ stop_shell <- function(sc) {
 }
 
 #' @export
-spark_connection_is_open.spark_shell_connection <- function(sc) {
+connection_is_open.spark_shell_connection <- function(sc) {
   bothOpen <- FALSE
   if (!identical(sc, NULL)) {
     tryCatch({
@@ -265,7 +265,7 @@ invoke_method.spark_shell_connection <- function(sc, static, object, method, ...
 
 #' @export
 print_jobj.spark_shell_connection <- function(sc, jobj, ...) {
-  if (spark_connection_is_open(sc)) {
+  if (connection_is_open(sc)) {
     info <- jobj_info(jobj)
     fmt <- "<jobj[%s]>\n  %s\n  %s\n"
     cat(sprintf(fmt, jobj$id, info$class, info$repr))
