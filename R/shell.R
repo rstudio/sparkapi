@@ -2,7 +2,6 @@
 #'
 #' @param master Spark cluster url to connect to. Use \code{"local"} to connect to a local
 #'   instance of Spark
-#' @param spark_home Path to Spark home directory
 #' @param app_name Application name to be used while running in the Spark cluster
 #' @param config Named character vector of spark.context.* options
 #' @param jars Paths to Jar files to include
@@ -15,9 +14,11 @@
 #'
 #' @return \code{spark_connection} object
 #'
+#' @note The SPARK_HOME environment variable must be set prior to
+#'   calling \code{start_shell}.
+#'
 #' @export
 start_shell <- function(master,
-                        spark_home = Sys.getenv("SPARK_HOME"),
                         app_name = "sparkapi",
                         config = NULL,
                         jars = NULL,
@@ -26,9 +27,14 @@ start_shell <- function(master,
                         environment = NULL,
                         shell_args = NULL) {
 
+  # capture and validate spark_home
+  spark_home = Sys.getenv("SPARK_HOME", unset = NA)
+  if (is.na(spark_home))
+    stop("SPARK_HOME environment variable not set.")
+
   # validate spark_home
   if (!dir.exists(spark_home))
-    stop("spark_home directory '", spark_home ,"' not found")
+    stop("SPARK_HOME directory '", spark_home ,"' not found")
 
   # normalize spark_home
   spark_home <- normalizePath(spark_home)
