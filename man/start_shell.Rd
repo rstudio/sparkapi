@@ -5,9 +5,9 @@
 \alias{stop_shell}
 \title{Start the Spark R Shell}
 \usage{
-start_shell(master, spark_home, app_name, config = NULL, jars = NULL,
-  packages = NULL, extensions = NULL, environment = NULL,
-  shell_args = NULL)
+start_shell(master, spark_home = Sys.getenv("SPARK_HOME"),
+  app_name = "sparkapi", config = NULL, jars = NULL, packages = NULL,
+  extensions = NULL, environment = NULL, shell_args = NULL)
 
 stop_shell(sc)
 }

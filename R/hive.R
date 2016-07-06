@@ -30,11 +30,11 @@ create_hive_context_v2 <- function(sc) {
   conf <- invoke(session, "conf")
 
   # apply spark.session. params
-  params <- read_config(sc$config, sc$master, "spark.session.")
+  params <- connection_config(sc, "spark.session.")
   apply_config(params, conf, "set")
 
   # apply spark.sql. params
-  params <- read_config(sc$config, sc$master, "spark.sql.")
+  params <- connection_config(sc, "spark.sql.")
   apply_config(params, conf, "set")
 
   # return session as hive context
@@ -80,7 +80,7 @@ create_hive_context_v1 <- function(sc) {
   }
 
   # apply configuration
-  params <- read_config(sc$config, sc$master, "spark.sql.")
+  params <- connection_config(sc, "spark.sql.")
   apply_config(params, hive_context, "setConf")
 
   # return hive_context

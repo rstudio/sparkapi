@@ -88,10 +88,9 @@ spark_version <- function(sc) {
   numeric_version(version)
 }
 
-#' Read configuration values
+#' Read configuration values for a connection
 #'
-#' @param config List with configuration values
-#' @param master Master node
+#' @param sc \code{spark_connection}
 #' @param prefix Optional prefix to read parameters for
 #'   (e.g. \code{spark.context.}, \code{spark.sql.}, etc.)
 #'
@@ -99,9 +98,12 @@ spark_version <- function(sc) {
 #'  specified then the names will not include the prefix)
 #'
 #' @export
-read_config <- function(config, master, prefix = NULL) {
+connection_config <- function(sc, prefix = NULL) {
 
+  config <- sc$config
+  master <- sc$master
   isLocal <- spark_master_is_local(master)
+
   configNames <- Filter(function(e) {
     found <- is.null(prefix) ||
       (substring(e, 1, nchar(prefix)) == prefix)
@@ -188,7 +190,7 @@ initialize_connection <- function(sc) {
   conf <- invoke(conf, "setAppName", sc$app_name)
   conf <- invoke(conf, "setMaster", sc$master)
   conf <- invoke(conf, "setSparkHome", sc$spark_home)
-  context_config <- read_config(sc$config, sc$master, "spark.context.")
+  context_config <- connection_config(sc, "spark.context.")
   lapply(names(context_config), function(param) {
     conf <<- invoke(conf, "set", param, context_config[[param]])
   })
