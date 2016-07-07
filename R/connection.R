@@ -91,14 +91,14 @@ spark_version <- function(sc) {
 #' Read configuration values for a connection
 #'
 #' @param sc \code{spark_connection}
-#' @param prefix Optional prefix to read parameters for
+#' @param prefix Prefix to read parameters for
 #'   (e.g. \code{spark.context.}, \code{spark.sql.}, etc.)
 #'
 #' @return Named list of config parameters (note that if a prefix was
 #'  specified then the names will not include the prefix)
 #'
 #' @export
-connection_config <- function(sc, prefix = NULL) {
+connection_config <- function(sc, prefix) {
 
   config <- sc$config
   master <- sc$master
