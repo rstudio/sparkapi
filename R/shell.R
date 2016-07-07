@@ -188,12 +188,7 @@ spark_log.spark_shell_connection <- function(sc, n = 100, ...) {
 
 #' @export
 spark_web.spark_shell_connection <- function(sc, ...) {
-
-  log <- file(sc$output_file)
-  lines <- readLines(log)
-  close(log)
-
-  lines <- utils::head(lines, n = 200)
+  lines <- spark_log(sc, n = 200)
 
   foundMatch <- FALSE
   uiLine <- grep("Started SparkUI at ", lines, perl=TRUE, value=TRUE)
