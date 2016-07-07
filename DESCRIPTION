@@ -1,7 +1,7 @@
 Package: sparkapi
 Type: Package
 Title: Spark API Interface
-Version: 0.3.5
+Version: 0.3.6
 Authors@R: c(
   person("Javier", "Luraschi", email = "javier@rstudio.com", role = c("aut", "cre")),
   person(family = "The Apache Software Foundation", role = c("aut", "cph")),
@@ -10,7 +10,8 @@ Authors@R: c(
   person(family = "RStudio", role = c("cph")))
 Imports:
   utils,
-  magrittr
+  magrittr,
+  withr
 Suggests:
   testthat
 Description: Low-level socket-based interface to calling the Spark API via the

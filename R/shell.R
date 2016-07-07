@@ -2,6 +2,7 @@
 #'
 #' @param master Spark cluster url to connect to. Use \code{"local"} to connect to a local
 #'   instance of Spark
+#' @param spark_home Spark home directory (defaults to SPARK_HOME environment variable)
 #' @param app_name Application name to be used while running in the Spark cluster
 #' @param config Named character vector of spark.context.* options
 #' @param jars Paths to Jar files to include
@@ -14,11 +15,9 @@
 #'
 #' @return \code{spark_connection} object
 #'
-#' @note The SPARK_HOME environment variable must be set prior to
-#'   calling \code{start_shell}.
-#'
 #' @export
 start_shell <- function(master,
+                        spark_home = Sys.getenv("SPARK_HOME"),
                         app_name = "sparkapi",
                         config = NULL,
                         jars = NULL,
@@ -27,17 +26,17 @@ start_shell <- function(master,
                         environment = NULL,
                         shell_args = NULL) {
 
-  # capture and validate spark_home
-  spark_home = Sys.getenv("SPARK_HOME", unset = NA)
-  if (is.na(spark_home))
-    stop("SPARK_HOME environment variable not set.")
-
-  # validate spark_home
+  # validate and normalize spark_home
+  if (!nzchar(spark_home))
+    stop("No spark_home specified (defaults to SPARK_HOME environment varirable).")
   if (!dir.exists(spark_home))
     stop("SPARK_HOME directory '", spark_home ,"' not found")
-
-  # normalize spark_home
   spark_home <- normalizePath(spark_home)
+
+  # set SPARK_HOME into child process environment
+  if (is.null(environment()))
+    environment <- list()
+  environment$SPARK_HOME <- spark_home
 
   # provide empty config if necessary
   if (is.null(config))
@@ -72,13 +71,15 @@ start_shell <- function(master,
   # create temp file for stdout and stderr
   output_file <- tempfile(fileext = "_spark.log")
 
-  # start the shell
-  system2(spark_submit_path,
-          args = shell_args,
-          stdout = output_file,
-          stderr = output_file,
-          env = environment,
-          wait = FALSE)
+  # start the shell (w/ specified additional environment variables)
+  env <- unlist(environment)
+  withr::with_envvar(env, {
+    system2(spark_submit_path,
+            args = shell_args,
+            stdout = output_file,
+            stderr = output_file,
+            wait = FALSE)
+  })
 
   # wait for the shell output file
   if (!wait_file_exists(shell_output_path)) {

@@ -5,15 +5,17 @@
 \alias{stop_shell}
 \title{Start the Spark R Shell}
 \usage{
-start_shell(master, app_name = "sparkapi", config = NULL, jars = NULL,
-  packages = NULL, extensions = NULL, environment = NULL,
-  shell_args = NULL)
+start_shell(master, spark_home = Sys.getenv("SPARK_HOME"),
+  app_name = "sparkapi", config = NULL, jars = NULL, packages = NULL,
+  extensions = NULL, environment = NULL, shell_args = NULL)
 
 stop_shell(sc)
 }
 \arguments{
 \item{master}{Spark cluster url to connect to. Use \code{"local"} to connect to a local
 instance of Spark}
+
+\item{spark_home}{Spark home directory (defaults to SPARK_HOME environment variable)}
 
 \item{app_name}{Application name to be used while running in the Spark cluster}
 
@@ -39,9 +41,5 @@ instance of Spark}
 Start the Spark R Shell
 
 Stop the Spark R Shell
-}
-\note{
-The SPARK_HOME environment variable must be set prior to
-  calling \code{start_shell}.
 }
 

@@ -27,7 +27,7 @@ To use the sparkapi package in standalone mode, you establish a connection to Sp
 library(sparkapi)
 
 # connect to spark shell
-sc <- start_shell(master = "local")
+sc <- start_shell(master = "local", spark_home = "/opt/spark/spark-1.6.2-bin-hadoop2.6")
 
 # implement a function which counts the lines of a text file
 count_lines <- function(sc, file) {
@@ -43,7 +43,7 @@ count_lines(sc, "hdfs://path/data.csv")
 stop_shell(sc)
 ```
 
-Note that the above example assumes that you have previously set the `SPARK_HOME` environment variable to the location of your Spark installation.
+Note that you can either explicitly pass the path to `spark_home` as shown above or alternatively rely on the default behavior (reading the `SPARK_HOME` environment variable).
 
 Extension Packages
 ------------------
