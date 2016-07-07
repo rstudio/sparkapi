@@ -58,12 +58,12 @@ start_shell <- function(master,
 
   # add jars to arguments
   if (length(jars) > 0) {
-    shell_args <- c(shell_args, "--jars", paste(jars, collapse=","))
+    shell_args <- c(shell_args, "--jars", paste(shQuote(jars), collapse=","))
   }
 
   # add packages to arguments
   if (length(packages) > 0) {
-    shell_args <- c(shell_args, "--packages", paste(packages, collapse=","))
+    shell_args <- c(shell_args, "--packages", paste(shQuote(packages), collapse=","))
   }
 
   # add sparkr-shell to args
