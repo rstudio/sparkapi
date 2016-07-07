@@ -54,7 +54,7 @@ start_shell <- function(master,
   extensions <- spark_dependencies_from_extensions(extensions)
 
   # combine passed jars and packages with extensions
-  jars <- unique(c(jars, extensions$jars))
+  jars <- normalizePath(unique(c(jars, extensions$jars)))
   packages <- unique(c(packages, extensions$packages))
 
   # add jars and packages to arguments
@@ -65,7 +65,7 @@ start_shell <- function(master,
   shell_args <- c(shell_args, "sparkr-shell")
 
   # create temporary file for shell ports output and add it to the args
-  shell_output_path <- tempfile(fileext = ".out")
+  shell_output_path <- normalizePath(tempfile(fileext = ".out"), mustWork = FALSE)
   on.exit(unlink(shell_output_path))
   shell_args <- c(shell_args, shell_output_path)
 
