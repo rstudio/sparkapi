@@ -56,9 +56,15 @@ start_shell <- function(master,
   jars <- normalizePath(unique(c(jars, extensions$jars)))
   packages <- unique(c(packages, extensions$packages))
 
-  # add jars and packages to arguments
-  shell_args <- c(shell_args, "--jars", paste(jars, collapse=","))
-  shell_args <- c(shell_args, "--packages", paste(packages, collapse=","))
+  # add jars to arguments
+  if (length(jars) > 0) {
+    shell_args <- c(shell_args, "--jars", paste(jars, collapse=","))
+  }
+
+  # add packages to arguments
+  if (length(packages) > 0) {
+    shell_args <- c(shell_args, "--packages", paste(packages, collapse=","))
+  }
 
   # add sparkr-shell to args
   shell_args <- c(shell_args, "sparkr-shell")
