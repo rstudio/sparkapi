@@ -196,7 +196,11 @@ initialize_connection <- function(sc) {
   conf <- invoke(conf, "setAppName", sc$app_name)
   conf <- invoke(conf, "setMaster", sc$master)
   conf <- invoke(conf, "setSparkHome", sc$spark_home)
-  context_config <- connection_config(sc, "spark.")
+
+  context_config <- connection_config(sc, "spark.", c(
+    "spark.sql.",
+    "spark.session."))
+
   lapply(names(context_config), function(param) {
     conf <<- invoke(conf, "set", paste0("spark.", param), context_config[[param]])
   })
