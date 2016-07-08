@@ -4,7 +4,7 @@
 #'   instance of Spark
 #' @param spark_home Spark home directory (defaults to SPARK_HOME environment variable)
 #' @param app_name Application name to be used while running in the Spark cluster
-#' @param config Named character vector of spark.context.* options
+#' @param config Named character vector of spark.* options
 #' @param jars Paths to Jar files to include
 #' @param packages Spark packages to include
 #' @param extensions Extension packages to include dependencies for
@@ -19,10 +19,10 @@
 start_shell <- function(master,
                         spark_home = Sys.getenv("SPARK_HOME"),
                         app_name = "sparkapi",
-                        config = NULL,
+                        config = list(),
+                        extensions = sparkapi::registered_extensions(),
                         jars = NULL,
                         packages = NULL,
-                        extensions = NULL,
                         environment = NULL,
                         shell_args = NULL) {
 

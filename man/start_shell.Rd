@@ -6,8 +6,9 @@
 \title{Start the Spark R Shell}
 \usage{
 start_shell(master, spark_home = Sys.getenv("SPARK_HOME"),
-  app_name = "sparkapi", config = NULL, jars = NULL, packages = NULL,
-  extensions = NULL, environment = NULL, shell_args = NULL)
+  app_name = "sparkapi", config = list(),
+  extensions = sparkapi::registered_extensions(), jars = NULL,
+  packages = NULL, environment = NULL, shell_args = NULL)
 
 stop_shell(sc)
 }
@@ -19,14 +20,14 @@ instance of Spark}
 
 \item{app_name}{Application name to be used while running in the Spark cluster}
 
-\item{config}{Named character vector of spark.context.* options}
+\item{config}{Named character vector of spark.* options}
+
+\item{extensions}{Extension packages to include dependencies for
+(see \code{\link{spark_dependency}}).}
 
 \item{jars}{Paths to Jar files to include}
 
 \item{packages}{Spark packages to include}
-
-\item{extensions}{Extension packages to include dependencies for
-(see \code{\link{spark_dependency}}).}
 
 \item{environment}{Environment variables to set}
 

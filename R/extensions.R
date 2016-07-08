@@ -1,4 +1,31 @@
 
+
+#' Register a package that implements a sparkapi extension
+#'
+#' Registering an extension package will result in the package being
+#' automatically scanned for spark dependencies when a connection
+#' to Spark is initiated (e.g. via \code{start_shell}).
+#'
+#' @param package Name of package to register
+#'
+#' @note Extensions are typically registered when packages are
+#'   loaded onto the search path (i.e. in the \code{.onLoad}
+#'   function).
+#'
+#' @export
+register_extension <- function(package) {
+  .globals$extension_packages <- c(.globals$extension_packages, package)
+}
+
+#' Enumerate all registered extension packages
+
+#' @rdname register_extension
+#' @export
+registered_extensions <- function() {
+  .globals$extension_packages
+}
+
+
 #' Define a Spark dependency
 #'
 #' Define a Spark dependency consisting of a set of custom JARs and Spark packages.
