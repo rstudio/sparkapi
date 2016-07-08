@@ -9,7 +9,7 @@
 #' @return An object of type `spark_dependency`
 #'
 #' @export
-spark_dependency <- function(jars, packages) {
+spark_dependency <- function(jars = NULL, packages = NULL) {
   structure(class = "spark_dependency", list(
     jars = jars,
     packages = packages
