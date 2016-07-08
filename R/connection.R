@@ -98,7 +98,7 @@ spark_version <- function(sc) {
 #'  specified then the names will not include the prefix)
 #'
 #' @export
-connection_config <- function(sc, prefix) {
+connection_config <- function(sc, prefix, not_prefixes = list()) {
 
   config <- sc$config
   master <- sc$master
@@ -116,6 +116,12 @@ connection_config <- function(sc, prefix) {
 
     found
   }, names(config))
+
+  lapply(not_prefixes, function(notPrefix) {
+    configNames <<- Filter(function(e) {
+      substring(e, 1, nchar(notPrefix)) != notPrefix
+    }, configNames)
+  })
 
   paramsNames <- lapply(configNames, function(configName) {
     paramName <- substr(configName, nchar(prefix) + 1, nchar(configName))
