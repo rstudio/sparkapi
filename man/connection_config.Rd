@@ -4,13 +4,15 @@
 \alias{connection_config}
 \title{Read configuration values for a connection}
 \usage{
-connection_config(sc, prefix)
+connection_config(sc, prefix, not_prefix = list())
 }
 \arguments{
 \item{sc}{\code{spark_connection}}
 
 \item{prefix}{Prefix to read parameters for
 (e.g. \code{spark.context.}, \code{spark.sql.}, etc.)}
+
+\item{not_prefix}{Prefix to not include.}
 }
 \value{
 Named list of config parameters (note that if a prefix was
