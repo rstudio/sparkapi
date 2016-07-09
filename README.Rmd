@@ -178,7 +178,7 @@ Accepting a `spark_jobj` or `spark_dataframe` as the first argument of a functio
 
 ## Dependencies
 
-When creating R packages which implement interfaces to Spark you may need to include additional dependencies. Your dependencies might be a set of [Spark Packages](https://spark-packages.org/) or might be a custom JAR file. In either case, you'll need a way to specify that these dependencies be included during the initialization of a Spark session. A Spark dependency is defined using the `spark_dependency` function:
+When creating R packages which implement interfaces to Spark you may need to include additional dependencies. Your dependencies might be a set of [Spark Packages](https://spark-packages.org/) or might be a custom JAR file. In either case, you'll need a way to specify that these dependencies should be included during the initialization of a Spark session. A Spark dependency is defined using the `spark_dependency` function:
 
 | Function | Description  |
 |----------------------------|---------------------------------------------|
@@ -187,22 +187,33 @@ When creating R packages which implement interfaces to Spark you may need to inc
 Your extension package can specify it's dependencies by implementing a function named `spark_dependencies` within the package (this function should *not* be publicly exported). For example, let's say you were creating an extension package named **sparkds** that needs to include a custom JAR as well as the Redshift and Apache Avro packages:
 
 ```{r}
-spark_dependencies <- function(...) {
+spark_dependencies <- function(scala_version, ...) {
   spark_dependency(
-    jars = system.file("java/sparkds.jar", package = "sparkds"),
-    packages = c("com.databricks:spark-redshift_2.10:0.6.0",
-                 "com.databricks:spark-avro_2.10:2.0.1")
+    jars = c(
+      system.file(sprintf("java/sparkds_%s.jar", scala_version), package = "sparkds")
+    ),
+    packages = c(
+      sprintf("com.databricks:spark-redshift_%s:0.6.0", scala_version),
+      sprintf("com.databricks:spark-avro_%s:2.0.1", scala_version)
+    )
   )
+}
+
+.onLoad <- function(libname, pkgname) {
+  sparkapi::register_extension(pkgname)
 }
 ```
 
+The `scala_version` argument is provided so that a single package can support multiple Scala compiler versions for it's JARs and packages (currently Scala downloadable binaries are compiled with Scala 2.10 but at some point Scala 2.11 will also be supported).
+
 The `...` argument is unused but nevertheless should be included to ensure compatibility if new arguments are added to `spark_dependencies` in the future.
 
-When users connect to a Spark cluster and want to use your extension package within their session they simply include the **sparkds** package in a list of extensions passed to e.g. `start_shell` or `spark_connect`:
+The `.onLoad` function registers your extension package so that it's `spark_dependencies` function will be automatically called when new connections to Spark are made via `start_shell` or `spark_connect`:
 
 ```{r, eval=FALSE}
-library(sparklyr)
-sc <- spark_connect(master = "local", extensions = c("sparkds"))
+library(sparkapi)
+library(sparkds)
+sc <- start_shell(master = "local")
 ```
 
 

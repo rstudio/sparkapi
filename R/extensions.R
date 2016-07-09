@@ -43,37 +43,13 @@ spark_dependency <- function(jars = NULL, packages = NULL) {
   ))
 }
 
-spark_dependencies_from_extension <- function(extension) {
-
-  # attempt to find the function
-  spark_dependencies <- tryCatch({
-      get("spark_dependencies", asNamespace(extension), inherits = FALSE)
-    },
-    error = function(e) {
-      stop("spark_dependencies function not found within ",
-           "extension package ", extension, call. = FALSE)
-    }
-  )
-
-  # call the function
-  dependency <- spark_dependencies()
-
-  # if it's just a single dependency then wrap it in a list
-  if (inherits(dependency, "spark_dependency"))
-    dependency <- list(dependency)
-
-  # return it
-  dependency
-}
-
-
-spark_dependencies_from_extensions <- function(extensions) {
+spark_dependencies_from_extensions <- function(scala_version, extensions) {
 
   jars <- character()
   packages <- character()
 
   lapply(extensions, function(extension) {
-    dependencies <- spark_dependencies_from_extension(extension)
+    dependencies <- spark_dependencies_from_extension(scala_version, extension)
     lapply(dependencies, function(dependency) {
       jars <<- c(jars, dependency$jars)
       packages <<- c(packages, dependency$packages)
@@ -86,7 +62,7 @@ spark_dependencies_from_extensions <- function(extensions) {
   )
 }
 
-spark_dependencies_from_extension <- function(extension) {
+spark_dependencies_from_extension <- function(scala_version, extension) {
 
   # attempt to find the function
   spark_dependencies <- tryCatch({
@@ -99,7 +75,7 @@ spark_dependencies_from_extension <- function(extension) {
   )
 
   # call the function
-  dependency <- spark_dependencies()
+  dependency <- spark_dependencies(scala_version)
 
   # if it's just a single dependency then wrap it in a list
   if (inherits(dependency, "spark_dependency"))
