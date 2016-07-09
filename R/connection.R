@@ -93,12 +93,13 @@ spark_version <- function(sc) {
 #' @param sc \code{spark_connection}
 #' @param prefix Prefix to read parameters for
 #'   (e.g. \code{spark.context.}, \code{spark.sql.}, etc.)
+#' @param not_prefix Prefix to not include.
 #'
 #' @return Named list of config parameters (note that if a prefix was
 #'  specified then the names will not include the prefix)
 #'
 #' @export
-connection_config <- function(sc, prefix, not_prefixes = list()) {
+connection_config <- function(sc, prefix, not_prefix = list()) {
 
   config <- sc$config
   master <- sc$master
@@ -117,7 +118,7 @@ connection_config <- function(sc, prefix, not_prefixes = list()) {
     found
   }, names(config))
 
-  lapply(not_prefixes, function(notPrefix) {
+  lapply(not_prefix, function(notPrefix) {
     configNames <<- Filter(function(e) {
       substring(e, 1, nchar(notPrefix)) != notPrefix
     }, configNames)
@@ -197,13 +198,8 @@ initialize_connection <- function(sc) {
   conf <- invoke(conf, "setMaster", sc$master)
   conf <- invoke(conf, "setSparkHome", sc$spark_home)
 
-  context_config <- connection_config(sc, "spark.", c(
-    "spark.sql.",
-    "spark.session."))
-
-  lapply(names(context_config), function(param) {
-    conf <<- invoke(conf, "set", paste0("spark.", param), context_config[[param]])
-  })
+  context_config <- connection_config(sc, "spark.", c("spark.sql."))
+  apply_config(context_config, conf, "set", "spark.")
 
   # create the spark context and assign the connection to it
   sc$spark_context <- invoke_new(
