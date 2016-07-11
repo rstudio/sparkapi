@@ -71,7 +71,7 @@ start_shell <- function(master,
   shell_args <- c(shell_args, "sparkr-shell")
 
   # create temporary file for shell ports output and add it to the args
-  portsFile <- if (!is.null(getOption("sparkapi.ports.file"))) getOption("sparkapi.ports.file") else tempfile(fileext = ".out")
+  portsFile <- getOption("sparkapi.ports.file", default = tempfile(fileext = ".out"))
   shell_output_path <- normalizePath(portsFile, mustWork = FALSE)
 
   on.exit(unlink(shell_output_path))
