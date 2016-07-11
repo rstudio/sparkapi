@@ -143,8 +143,9 @@ The following functions are useful for implementing wrapper functions of various
 | spark_connection | Get the Spark connection associated with an object (S3) |
 | spark_jobj | Get the Spark jobj associated with an object (S3) |
 | spark_dataframe | Get the Spark DataFrame associated with an object (S3) |
-| spark\_context | Get the SparkContext for a `spark_connection` |
-| hive\_context | Get the HiveContext for a `spark_connection` |
+| spark_context | Get the SparkContext for a `spark_connection` |
+| hive_context | Get the HiveContext for a `spark_connection` |
+| spark\_version | Get the version of Spark (as a `numeric_version`) for a `spark_connection` |
 
 
 The use of these functions is illustrated in this simple example:

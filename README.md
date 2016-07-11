@@ -138,13 +138,44 @@ The `count_lines` function takes a `spark_connection` (`sc`) argument which enab
 
 The following functions are useful for implementing wrapper functions of various kinds:
 
-| Function          | Description                                             |
-|-------------------|---------------------------------------------------------|
-| spark\_connection | Get the Spark connection associated with an object (S3) |
-| spark\_jobj       | Get the Spark jobj associated with an object (S3)       |
-| spark\_dataframe  | Get the Spark DataFrame associated with an object (S3)  |
-| spark\_context    | Get the SparkContext for a `spark_connection`           |
-| hive\_context     | Get the HiveContext for a `spark_connection`            |
+<table>
+<colgroup>
+<col width="38%" />
+<col width="61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>spark_connection</td>
+<td>Get the Spark connection associated with an object (S3)</td>
+</tr>
+<tr class="even">
+<td>spark_jobj</td>
+<td>Get the Spark jobj associated with an object (S3)</td>
+</tr>
+<tr class="odd">
+<td>spark_dataframe</td>
+<td>Get the Spark DataFrame associated with an object (S3)</td>
+</tr>
+<tr class="even">
+<td>spark_context</td>
+<td>Get the SparkContext for a <code>spark_connection</code></td>
+</tr>
+<tr class="odd">
+<td>hive_context</td>
+<td>Get the HiveContext for a <code>spark_connection</code></td>
+</tr>
+<tr class="even">
+<td>spark_version</td>
+<td>Get the version of Spark (as a <code>numeric_version</code>) for a <code>spark_connection</code></td>
+</tr>
+</tbody>
+</table>
 
 The use of these functions is illustrated in this simple example:
 
@@ -219,7 +250,7 @@ spark_dependencies <- function(scala_version, ...) {
 }
 ```
 
-The `scala_version` argument is provided so that a single package can support mutliple Scala compiler versions for it's JARs and packages (currently Scala downloadable binaries are compiled with Scala 2.10 but at some point Scala 2.11 will also be supported).
+The `scala_version` argument is provided so that a single package can support multiple Scala compiler versions for it's JARs and packages (currently Scala downloadable binaries are compiled with Scala 2.10 but at some point Scala 2.11 will also be supported).
 
 The `...` argument is unused but nevertheless should be included to ensure compatibility if new arguments are added to `spark_dependencies` in the future.
 
