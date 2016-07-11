@@ -45,6 +45,31 @@ stop_shell(sc)
 
 Note that you can either explicitly pass the path to `spark_home` as shown above or alternatively rely on the default behavior (reading the `SPARK_HOME` environment variable).
 
+You can use the following functions for initiating and terminating connections to Spark in standalone mode:
+
+<table>
+<colgroup>
+<col width="38%" />
+<col width="61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>start_shell</td>
+<td>Start an instance of the Spark shell and establish a connection to it.</td>
+</tr>
+<tr class="even">
+<td>stop_shell</td>
+<td>Stop the Spark shell associated with a connection.</td>
+</tr>
+</tbody>
+</table>
+
 Extension Packages
 ------------------
 
