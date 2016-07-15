@@ -14,6 +14,19 @@ spark_context <- function(sc) {
   sc$spark_context
 }
 
+#' Get the JavaSparkContext associated with a connection
+#'
+#' Get the JavaSparkContext \code{spark_jobj} associated with a
+#' \code{spark_connection}
+#'
+#' @param sc Connection to get SparkContext from
+#'
+#' @return Reference to SparkContext
+#' @export
+java_context <- function(sc) {
+  sc$java_context
+}
+
 #' Get the HiveContext associated with a connection
 #'
 #' Get the HiveContext \code{spark_jobj} associated with a
@@ -208,6 +221,14 @@ initialize_connection <- function(sc) {
     conf
   )
   sc$spark_context$connection <- sc
+
+  # create the java spark context and assign the connection to it
+  sc$java_context <- invoke_new(
+    sc,
+    "org.apache.spark.api.java.JavaSparkContext",
+    sc$spark_context
+  )
+  sc$java_context$connection <- sc
 
   # create the hive context and assign the connection to it
   sc$hive_context <- create_hive_context(sc)
