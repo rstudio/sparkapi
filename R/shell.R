@@ -11,6 +11,7 @@
 #'   (see \code{\link{spark_dependency}}).
 #' @param environment Environment variables to set
 #' @param shell_args Additional command line arguments for spark_shell
+#' @param app_jar spark-submit application jar parameter
 #' @param sc \code{spark_connection}
 #'
 #' @return \code{spark_connection} object
@@ -24,7 +25,8 @@ start_shell <- function(master,
                         jars = NULL,
                         packages = NULL,
                         environment = NULL,
-                        shell_args = NULL) {
+                        shell_args = NULL,
+                        app_jar = "sparkr-shell") {
 
   # validate and normalize spark_home
   if (!nzchar(spark_home))
@@ -68,7 +70,7 @@ start_shell <- function(master,
   }
 
   # add sparkr-shell to args
-  shell_args <- c(shell_args, "sparkr-shell")
+  shell_args <- c(shell_args, app_jar)
 
   # create temporary file for shell ports output and add it to the args
   shell_output_path <- getOption("sparkapi.ports.file",
