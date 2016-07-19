@@ -73,9 +73,10 @@ start_shell <- function(master,
   shell_args <- c(shell_args, app_jar)
 
   # create temporary file for shell ports output and add it to the args
-  shell_output_path <- getOption("sparkapi.ports.file",
-                                 default = normalizePath(tempfile(fileext = ".out"),
-                                                         mustWork = FALSE))
+  shell_output_path <- spark_config_value(config,
+                                          "sparkapi.ports.file",
+                                          normalizePath(tempfile(fileext = ".out"),
+                                                        mustWork = FALSE))
 
   on.exit(unlink(shell_output_path))
   shell_args <- c(shell_args, shell_output_path)
@@ -94,7 +95,8 @@ start_shell <- function(master,
   })
 
   # wait for the shell output file
-  if (!wait_file_exists(shell_output_path)) {
+  waitSeconds <- spark_config_value(config, "sparkapi.ports.wait.seconds", 100)
+  if (!wait_file_exists(shell_output_path, waitSeconds)) {
     stop(paste(
       "Failed to launch Spark shell. Ports file does not exist.\n",
       "    Path: ", spark_submit_path, "\n",
@@ -316,7 +318,8 @@ read_shell_file <- function(shell_file) {
 }
 
 
-wait_file_exists <- function(filename, retries = 1000) {
+wait_file_exists <- function(filename, seconds) {
+  retries <- seconds * 10
   while(!file.exists(filename) && retries >= 0) {
     retries <- retries  - 1;
     Sys.sleep(0.1)
@@ -341,4 +344,8 @@ read_spark_log_error <- function(sc) {
     msg <- paste("failed to invoke spark command", pasted, sep = "\n")
   })
   msg
+}
+
+spark_config_value <- function(config, name, default = NULL) {
+  if(is.null(config[[name]])) default else config[[name]]
 }
