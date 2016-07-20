@@ -10,34 +10,34 @@ if (!requireNamespace("digest", quietly = TRUE))
   install.packages("digest")
 library(digest)
 
-sparklyr_path <- file.path(root, "inst/java/sparklyr.jar")
-sparklyr_scala <- lapply(
+sparkapi_path <- file.path(root, "inst/java/sparkapi.jar")
+sparkapi_scala <- lapply(
   Filter(
     function(e) grepl(".*\\.scala$", e),
     list.files(file.path(root, "inst", "scala"))
   ),
   function(e) file.path(root, "inst", "scala", e)
 )
-sparklyr_scala_digest <- file.path(root, "inst/scala/sparklyr.scala.md5")
+sparkapi_scala_digest <- file.path(root, "inst/scala/sparkapi.scala.md5")
 
-sparklyr_scala_contents <- paste(lapply(sparklyr_scala, function(e) readLines(e)))
-sparklyr_scala_contents_path <- tempfile()
-sparklyr_scala_contents_file <- file(sparklyr_scala_contents_path, "w")
-writeLines(sparklyr_scala_contents, sparklyr_scala_contents_file)
-close(sparklyr_scala_contents_file)
+sparkapi_scala_contents <- paste(lapply(sparkapi_scala, function(e) readLines(e)))
+sparkapi_scala_contents_path <- tempfile()
+sparkapi_scala_contents_file <- file(sparkapi_scala_contents_path, "w")
+writeLines(sparkapi_scala_contents, sparkapi_scala_contents_file)
+close(sparkapi_scala_contents_file)
 
-# Bail if 'sparklyr.scala' hasn't changed
-md5 <- tools::md5sum(sparklyr_scala_contents_path)
-if (file.exists(sparklyr_scala_digest) && file.exists(sparklyr_path)) {
-  contents <- readChar(sparklyr_scala_digest, file.info(sparklyr_scala_digest)$size, TRUE)
-  if (identical(contents, md5[[sparklyr_scala_contents_path]])) {
+# Bail if 'sparkapi.scala' hasn't changed
+md5 <- tools::md5sum(sparkapi_scala_contents_path)
+if (file.exists(sparkapi_scala_digest) && file.exists(sparkapi_path)) {
+  contents <- readChar(sparkapi_scala_digest, file.info(sparkapi_scala_digest)$size, TRUE)
+  if (identical(contents, md5[[sparkapi_scala_contents_path]])) {
     stop()
   }
 }
 
-message("** building 'sparklyr.jar' ...")
+message("** building 'sparkapi.jar' ...")
 
-cat(md5, file = sparklyr_scala_digest)
+cat(md5, file = sparkapi_scala_digest)
 
 execute <- function(...) {
   cmd <- paste(...)
@@ -53,7 +53,7 @@ if (!nzchar(Sys.which("jar")))
 
 # Work in temporary directory (as temporary class files
 # will be generated within there)
-dir <- file.path(tempdir(), "sparklyr-scala-compile")
+dir <- file.path(tempdir(), "sparkapi-scala-compile")
 if (!file.exists(dir))
   if (!dir.create(dir))
     stop("Failed to create '", dir, "'")
@@ -109,18 +109,18 @@ classpath <- Sys.getenv("CLASSPATH")
 # set CLASSPATH environment variable rather than passing
 # in on command line (mostly aesthetic)
 Sys.setenv(CLASSPATH = CLASSPATH)
-execute("scalac", paste(shQuote(sparklyr_scala), collapse = " "))
+execute("scalac", paste(shQuote(sparkapi_scala), collapse = " "))
 Sys.setenv(CLASSPATH = classpath)
 
 # call 'jar' to create our jar
-class_files <- file.path("sparklyr", list.files("sparklyr", pattern = "class$"))
-execute("jar cf", sparklyr_path, paste(shQuote(class_files), collapse = " "))
+class_files <- file.path("sparkapi", list.files("sparkapi", pattern = "class$"))
+execute("jar cf", sparkapi_path, paste(shQuote(class_files), collapse = " "))
 
-# double-check existence of 'sparklyr.jar'
-if (file.exists(sparklyr_path)) {
-  message("*** ", basename(sparklyr_path), " successfully created.")
+# double-check existence of 'sparkapi.jar'
+if (file.exists(sparkapi_path)) {
+  message("*** ", basename(sparkapi_path), " successfully created.")
 } else {
-  stop("*** failed to create sparklyr.jar")
+  stop("*** failed to create sparkapi.jar")
 }
 
 setwd(owd)

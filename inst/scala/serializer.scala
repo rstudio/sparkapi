@@ -1,4 +1,4 @@
-package sparklyr
+package sparkapi
 
 import java.io.{DataInputStream, DataOutputStream}
 import java.nio.charset.StandardCharsets
@@ -7,7 +7,7 @@ import java.sql.{Date, Time, Timestamp}
 import scala.collection.JavaConverters._
 import scala.collection.mutable.WrappedArray
 
-object BackendSerializer {
+object Serializer {
   type ReadObject = (DataInputStream, Char) => Object
   type WriteObject = (DataOutputStream, Object) => Boolean
 

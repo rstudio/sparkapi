@@ -1,4 +1,4 @@
-package sparklyr
+package sparkapi
 
 import java.io._
 import java.io.File
@@ -6,7 +6,7 @@ import java.util.Arrays
 
 import org.apache.spark.{SparkEnv, SparkException}
 
-object BackendUtils {
+object Utils {
   var rPackages: Option[String] = None
 
   /**

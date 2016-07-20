@@ -1,4 +1,4 @@
-package sparklyr
+package sparkapi
 
 import java.io.{DataOutputStream, File, FileOutputStream, IOException}
 import java.net.{InetAddress, InetSocketAddress, ServerSocket}
@@ -24,9 +24,9 @@ class Backend {
 
   def init(): Int = {
     val conf = new SparkConf()
-    bossGroup = new NioEventLoopGroup(conf.getInt("sparklyr.backend.threads", 2))
+    bossGroup = new NioEventLoopGroup(conf.getInt("sparkapi.backend.threads", 2))
     val workerGroup = bossGroup
-    val handler = new BackendHandler(this)
+    val handler = new Handler(this)
 
     bootstrap = new ServerBootstrap()
       .group(bossGroup, workerGroup)
@@ -72,7 +72,7 @@ class Backend {
 object Backend extends Logging {
   def main(args: Array[String]): Unit = {
     if (args.length < 1) {
-      System.err.println("Usage: SparklyrBackend <ports-file-output>")
+      System.err.println("Usage: Backend <ports-file-output>")
       System.exit(-1)
     }
 
@@ -89,7 +89,7 @@ object Backend extends Logging {
       val dos = new DataOutputStream(new FileOutputStream(f))
       dos.writeInt(boundPort)
       dos.writeInt(listenPort)
-      BackendSerializer.writeString(dos, BackendUtils.rPackages.getOrElse(""))
+      Serializer.writeString(dos, Utils.rPackages.getOrElse(""))
       dos.close()
       f.renameTo(new File(path))
 

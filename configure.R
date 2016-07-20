@@ -22,11 +22,6 @@ compile_jars <- function() {
     return(FALSE)
   }
 
-  # sparklyr won't be available during configure stage, so just source
-  # the pieces necessary for determing spark versions + install paths
-  source("R/install_spark.R")
-  source("R/install_spark_versions.R")
-
   tryCatch(
     source("inst/tools/compile-scala.R"),
     error = function(e) {

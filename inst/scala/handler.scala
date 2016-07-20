@@ -1,4 +1,4 @@
-package sparklyr
+package sparkapi
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, DataOutputStream}
 
@@ -10,10 +10,10 @@ import io.netty.channel.ChannelHandler.Sharable
 
 import org.apache.spark.Logging
 
-import sparklyr.BackendSerializer._
+import sparkapi.Serializer._
 
 @Sharable
-class BackendHandler(server: Backend)
+class Handler(server: Backend)
 extends SimpleChannelInboundHandler[Array[Byte]] with Logging {
 
   override def channelRead0(ctx: ChannelHandlerContext, msg: Array[Byte]): Unit = {
@@ -150,7 +150,7 @@ extends SimpleChannelInboundHandler[Array[Byte]] with Logging {
         writeInt(dos, -1)
         // Writing the error message of the cause for the exception. This will be returned
         // to user in the R process.
-        writeString(dos, BackendUtils.exceptionString(e.getCause))
+        writeString(dos, Utils.exceptionString(e.getCause))
       }
     }
 
