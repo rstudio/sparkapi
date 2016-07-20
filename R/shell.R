@@ -165,7 +165,7 @@ start_shell <- function(master,
 stop_shell <- function(sc) {
   invoke_method(sc,
                 FALSE,
-                "SparkRHandler",
+                "Handler",
                 "stopBackend")
 
   close(sc$backend)

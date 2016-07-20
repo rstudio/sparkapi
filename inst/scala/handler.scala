@@ -29,7 +29,7 @@ extends SimpleChannelInboundHandler[Array[Byte]] with Logging {
     val methodName = readString(dis)
     val numArgs = readInt(dis)
 
-    if (objId == "SparkRHandler") {
+    if (objId == "Handler") {
       methodName match {
         // This function is for test-purpose only
         case "echo" =>
