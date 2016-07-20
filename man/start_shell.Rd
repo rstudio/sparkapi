@@ -8,8 +8,7 @@
 start_shell(master, spark_home = Sys.getenv("SPARK_HOME"),
   app_name = "sparkapi", config = list(),
   extensions = sparkapi::registered_extensions(), jars = NULL,
-  packages = NULL, environment = NULL, shell_args = NULL,
-  app_jar = "sparkr-shell")
+  packages = NULL, environment = NULL, shell_args = NULL)
 
 stop_shell(sc)
 }
@@ -34,9 +33,9 @@ instance of Spark}
 
 \item{shell_args}{Additional command line arguments for spark_shell}
 
-\item{app_jar}{spark-submit application jar parameter}
-
 \item{sc}{\code{spark_connection}}
+
+\item{app_jar}{spark-submit application jar parameter}
 }
 \value{
 \code{spark_connection} object

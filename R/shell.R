@@ -26,7 +26,12 @@ start_shell <- function(master,
                         packages = NULL,
                         environment = NULL,
                         shell_args = NULL,
-                        app_jar = "sparkr-shell") {
+                        app_jar = NULL) {
+  # by default use sparkapi backend but allow us to pass "sparkr-shell" to test against sparkr
+  if (is.null(app_jar)) {
+    app_jar <- system.file(file.path("java", "sparkapi.jar"), package = "sparkapi")
+    shell_args <- c(shell_args, "--class", "sparkapi.Backend")
+  }
 
   # validate and normalize spark_home
   if (!nzchar(spark_home))
