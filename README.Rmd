@@ -79,6 +79,14 @@ You'd typically create an extension package in cases where you wanted your users
 
 The following sections describe the core mechanism uses to invoke the Spark API from within R. Following that, some simple examples of R functions that might be included in an extension package are provided.
 
+Here are links to some additional examples of extension packages:
+
+| Package | Description  |
+|----------------------------|---------------------------------------------|
+| [`spark.sas7bdat`](https://github.com/bnosac/spark.sas7bdat) | Read in SAS data in parallel into Apache Spark. |
+
+
+
 ## Core Types
 
 The sparkapi package defines 3 classes for representing the fundamental types of the R to Java bridge:
