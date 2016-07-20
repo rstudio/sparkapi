@@ -12,7 +12,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder
 import io.netty.handler.codec.bytes.{ByteArrayDecoder, ByteArrayEncoder}
 
-import org.apache.spark.api.r;
 import org.apache.spark.SparkConf
 import org.apache.spark.Logging
 
