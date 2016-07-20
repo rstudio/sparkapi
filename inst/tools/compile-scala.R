@@ -6,8 +6,6 @@ if (!requireNamespace("rprojroot", quietly = TRUE))
 library(rprojroot)
 root <- rprojroot::find_package_root_file()
 
-Sys.setenv(R_SPARKLYR_INSTALL_INFO_PATH = file.path(root, "inst/extdata/install_spark.csv"))
-
 if (!requireNamespace("digest", quietly = TRUE))
   install.packages("digest")
 library(digest)
@@ -64,21 +62,27 @@ owd <- setwd(dir)
 spark_version <- "1.6.1"
 hadoop_version <- "2.6"
 
-# Get potential installation paths
-install_info <- tryCatch(
-  spark_install_find(spark_version, hadoop_version),
-  error = function(e) {
-    spark_install(spark_version, hadoop_version)
-    spark_install_find(spark_version, hadoop_version)
-  }
+# get installation path
+sparkVersionDir <- file.path(
+  rappdirs::app_dir("spark", "rstudio")$cache(),
+  paste0(
+    "spark-",
+    spark_version,
+    "-bin-hadoop",
+    hadoop_version
+  )
 )
+
+if (!dir.exists(sparkVersionDir)) {
+  stop("Spark home not found under: ", sparkVersionDir)
+}
 
 # list jars in the installation folder
 candidates <- c("jars", "lib")
 jars <- NULL
 for (candidate in candidates) {
   jars <- list.files(
-    file.path(install_info$sparkVersionDir, candidate),
+    file.path(sparkVersionDir, candidate),
     full.names = TRUE,
     pattern = "jar$"
   )
