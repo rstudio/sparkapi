@@ -29,7 +29,8 @@ start_shell <- function(master,
                         app_jar = NULL) {
   # by default use sparkapi backend but allow us to pass "sparkr-shell" to test against sparkr
   if (is.null(app_jar)) {
-    app_jar <- system.file(file.path("java", "sparkapi.jar"), package = "sparkapi")
+    app_jar <- normalizePath(system.file(file.path("java", "sparkapi.jar"), package = "sparkapi"),
+                             mustWork = FALSE)
     shell_args <- c(shell_args, "--class", "sparkapi.Backend")
   }
 
@@ -88,15 +89,29 @@ start_shell <- function(master,
 
   # create temp file for stdout and stderr
   output_file <- tempfile(fileext = "_spark.log")
+  error_file <- tempfile(fileext = "_spark.err")
 
   # start the shell (w/ specified additional environment variables)
   env <- unlist(environment)
   withr::with_envvar(env, {
-    system2(spark_submit_path,
-            args = shell_args,
-            stdout = output_file,
-            stderr = output_file,
-            wait = FALSE)
+    if (.Platform$OS.type == "windows") {
+      shell(paste(
+        spark_submit_path,
+        paste(shell_args, collapse = " "),
+        ">",
+        output_file,
+        "2>",
+        error_file
+      ),
+      wait = FALSE)
+    }
+    else {
+      system2(spark_submit_path,
+              args = shell_args,
+              stdout = output_file,
+              stderr = output_file,
+              wait = FALSE)
+    }
   })
 
   # wait for the shell output file
