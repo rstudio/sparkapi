@@ -264,7 +264,7 @@ When creating R packages which implement interfaces to Spark you may need to inc
 Your extension package can specify it's dependencies by implementing a function named `spark_dependencies` within the package (this function should *not* be publicly exported). For example, let's say you were creating an extension package named **sparkds** that needs to include a custom JAR as well as the Redshift and Apache Avro packages:
 
 ``` r
-spark_dependencies <- function(scala_version, ...) {
+spark_dependencies <- function(scala_version, spark_version, ...) {
   spark_dependency(
     jars = c(
       system.file(sprintf("java/sparkds_%s.jar", scala_version), package = "sparkds")

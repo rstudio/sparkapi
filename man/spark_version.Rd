@@ -2,14 +2,14 @@
 % Please edit documentation in R/connection.R
 \name{spark_version}
 \alias{spark_version}
-\title{Version of Spark for a connection}
+\title{Version of Spark for a connection or SPARK_HOME}
 \usage{
-spark_version(sc)
+spark_version(x)
 }
 \arguments{
-\item{sc}{\code{spark_connection}}
+\item{x}{\code{spark_connection} or path to SPARK_HOME}
 }
 \description{
-Version of Spark for a connection
+Version of Spark for a connection or SPARK_HOME
 }
 
