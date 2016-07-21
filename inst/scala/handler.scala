@@ -8,13 +8,12 @@ import scala.language.existentials
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 import io.netty.channel.ChannelHandler.Sharable
 
-import org.apache.spark.Logging
-
+import sparkapi.Logging._
 import sparkapi.Serializer._
 
 @Sharable
 class Handler(server: Backend)
-extends SimpleChannelInboundHandler[Array[Byte]] with Logging {
+extends SimpleChannelInboundHandler[Array[Byte]] {
 
   override def channelRead0(ctx: ChannelHandlerContext, msg: Array[Byte]): Unit = {
     val bis = new ByteArrayInputStream(msg)
