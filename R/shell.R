@@ -122,6 +122,7 @@ start_shell <- function(master,
       "    Parameters: ", paste(shell_args, collapse = ", "), "\n",
       "    \n",
       paste(readLines(output_file), collapse = "\n"),
+      if (file.exists(error_file)) paste(readLines(error_file), collapse = "\n") else "",
       sep = ""))
   }
 
