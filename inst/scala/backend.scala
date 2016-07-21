@@ -13,7 +13,6 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder
 import io.netty.handler.codec.bytes.{ByteArrayDecoder, ByteArrayEncoder}
 
 import org.apache.spark.SparkConf
-import org.apache.spark.Logging
 
 class Backend {
 
@@ -68,7 +67,7 @@ class Backend {
 
 }
 
-object Backend extends Logging {
+object Backend {
   def main(args: Array[String]): Unit = {
     if (args.length < 1) {
       System.err.println("Usage: Backend <ports-file-output>")
@@ -115,7 +114,7 @@ object Backend extends Logging {
       backend.run()
     } catch {
       case e: IOException =>
-        logError("Server shutting down: failed with exception ", e)
+        //logError("Server shutting down: failed with exception ", e)
         backend.close()
         System.exit(1)
     }

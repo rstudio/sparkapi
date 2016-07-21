@@ -8,13 +8,11 @@ import scala.language.existentials
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 import io.netty.channel.ChannelHandler.Sharable
 
-import org.apache.spark.Logging
-
 import sparkapi.Serializer._
 
 @Sharable
 class Handler(server: Backend)
-extends SimpleChannelInboundHandler[Array[Byte]] with Logging {
+extends SimpleChannelInboundHandler[Array[Byte]] {
 
   override def channelRead0(ctx: ChannelHandlerContext, msg: Array[Byte]): Unit = {
     val bis = new ByteArrayInputStream(msg)
@@ -52,7 +50,7 @@ extends SimpleChannelInboundHandler[Array[Byte]] with Logging {
             writeObject(dos, null)
           } catch {
             case e: Exception =>
-              logError(s"Removing $objId failed", e)
+              //logError(s"Removing $objId failed", e)
             writeInt(dos, -1)
             writeString(dos, s"Removing $objId failed: ${e.getMessage}")
           }
@@ -108,10 +106,10 @@ extends SimpleChannelInboundHandler[Array[Byte]] with Logging {
             args)
 
           if (index.isEmpty) {
-            logWarning(s"cannot find matching method ${cls}.$methodName. "
-                       + s"Candidates are:")
+            //logWarning(s"cannot find matching method ${cls}.$methodName. "
+                       //+ s"Candidates are:")
             selectedMethods.foreach { method =>
-              logWarning(s"$methodName(${method.getParameterTypes.mkString(",")})")
+              //logWarning(s"$methodName(${method.getParameterTypes.mkString(",")})")
             }
             throw new Exception(s"No matched method found for $cls.$methodName")
           }
@@ -129,10 +127,10 @@ extends SimpleChannelInboundHandler[Array[Byte]] with Logging {
             args)
 
           if (index.isEmpty) {
-            logWarning(s"cannot find matching constructor for ${cls}. "
-                       + s"Candidates are:")
+            //logWarning(s"cannot find matching constructor for ${cls}. "
+                       //+ s"Candidates are:")
             ctors.foreach { ctor =>
-              logWarning(s"$cls(${ctor.getParameterTypes.mkString(",")})")
+              //logWarning(s"$cls(${ctor.getParameterTypes.mkString(",")})")
             }
             throw new Exception(s"No matched constructor found for $cls")
           }
@@ -146,7 +144,7 @@ extends SimpleChannelInboundHandler[Array[Byte]] with Logging {
         }
       } catch {
         case e: Exception =>
-          logError(s"$methodName on $objId failed")
+          //logError(s"$methodName on $objId failed")
         writeInt(dos, -1)
         // Writing the error message of the cause for the exception. This will be returned
         // to user in the R process.
