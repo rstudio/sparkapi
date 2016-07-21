@@ -11,7 +11,6 @@
 #'   (see \code{\link{spark_dependency}}).
 #' @param environment Environment variables to set
 #' @param shell_args Additional command line arguments for spark_shell
-#' @param app_jar spark-submit application jar parameter
 #' @param sc \code{spark_connection}
 #'
 #' @return \code{spark_connection} object
@@ -25,9 +24,9 @@ start_shell <- function(master,
                         jars = NULL,
                         packages = NULL,
                         environment = NULL,
-                        shell_args = NULL,
-                        app_jar = NULL) {
-  # by default use sparkapi backend but allow us to pass "sparkr-shell" to test against sparkr
+                        shell_args = NULL) {
+  # read app jar through config, this allows "sparkr-shell" to test sparkr backend
+  app_jar <- spark_config_value(config, "sparkapi.app.jar", NULL)
   if (is.null(app_jar)) {
     app_jar <- normalizePath(system.file(file.path("java", "sparkapi.jar"), package = "sparkapi"),
                              mustWork = FALSE)

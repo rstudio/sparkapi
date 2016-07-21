@@ -34,8 +34,6 @@ instance of Spark}
 \item{shell_args}{Additional command line arguments for spark_shell}
 
 \item{sc}{\code{spark_connection}}
-
-\item{app_jar}{spark-submit application jar parameter}
 }
 \value{
 \code{spark_connection} object
