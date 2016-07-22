@@ -57,9 +57,9 @@ start_shell <- function(master,
   spark_submit_path <- normalizePath(file.path(spark_home, "bin", spark_submit))
 
   # resolve extensions
-  scala_version <- numeric_version("2.10")
   spark_version <- spark_version_from_home(spark_home)
-  extensions <- spark_dependencies_from_extensions(scala_version, spark_version, extensions)
+  scala_version <- numeric_version("2.10")
+  extensions <- spark_dependencies_from_extensions(spark_version, scala_version, extensions)
 
   # combine passed jars and packages with extensions
   jars <- normalizePath(unique(c(jars, extensions$jars)))

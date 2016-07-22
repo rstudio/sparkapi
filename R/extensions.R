@@ -43,13 +43,13 @@ spark_dependency <- function(jars = NULL, packages = NULL) {
   ))
 }
 
-spark_dependencies_from_extensions <- function(scala_version, spark_version, extensions) {
+spark_dependencies_from_extensions <- function(spark_version, scala_version, extensions) {
 
   jars <- character()
   packages <- character()
 
   lapply(extensions, function(extension) {
-    dependencies <- spark_dependencies_from_extension(scala_version, spark_version, extension)
+    dependencies <- spark_dependencies_from_extension(spark_version, scala_version, extension)
     lapply(dependencies, function(dependency) {
       jars <<- c(jars, dependency$jars)
       packages <<- c(packages, dependency$packages)
@@ -62,7 +62,7 @@ spark_dependencies_from_extensions <- function(scala_version, spark_version, ext
   )
 }
 
-spark_dependencies_from_extension <- function(scala_version, spark_version, extension) {
+spark_dependencies_from_extension <- function(spark_version, scala_version, extension) {
 
   # attempt to find the function
   spark_dependencies <- tryCatch({
@@ -75,7 +75,8 @@ spark_dependencies_from_extension <- function(scala_version, spark_version, exte
   )
 
   # call the function
-  dependency <- spark_dependencies(scala_version, spark_version)
+  dependency <- spark_dependencies(spark_version = spark_version,
+                                   scala_version = scala_version)
 
   # if it's just a single dependency then wrap it in a list
   if (inherits(dependency, "spark_dependency"))
