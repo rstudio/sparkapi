@@ -114,7 +114,7 @@ Here are links to some additional examples of extension packages:
 </tr>
 <tr class="even">
 <td><a href="https://github.com/jjallaire/sparklingwater"><code>sparklingwater</code></a></td>
-<td>Simple demo / proof-of-concept extension for using the Sparking Water package from H2O.</td>
+<td>Demo / proof-of-concept extension for using the Sparking Water package from H2O.</td>
 </tr>
 </tbody>
 </table>
