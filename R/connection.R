@@ -105,6 +105,17 @@ spark_version <- function(sc) {
   numeric_version(version)
 }
 
+spark_version_from_home_version <- function() {
+  version <- Sys.getenv("SPARK_HOME_VERSION")
+  if (is.null(version)) {
+    stop(
+      "RELEASE file not found and the SPARK_HOME_VERSION ",
+      "environment variable is not set.")
+  }
+
+  numeric_version(version)
+}
+
 #' Version of Spark for a SPARK_HOME directory
 #'
 #' @param spark_home Path to SPARK_HOME
@@ -114,14 +125,25 @@ spark_version <- function(sc) {
 #' @export
 spark_version_from_home <- function(spark_home) {
   releaseFile <- file.path(spark_home, "RELEASE")
+
+  if (!file.exists(releaseFile)) {
+    return(spark_version_from_home_version())
+  }
+
   releaseContents <- readLines(releaseFile)
-  version <- gsub("Spark | built.*", "", releaseContents[[1]])
 
-  # Get rid of -preview and other suffix variations
-  version <- spark_version_clean(version)
+  if (is.null(releaseContents) || length(releaseContents) == 0) {
+    spark_version_from_home_version()
+  }
+  else {
+    version <- gsub("Spark | built.*", "", releaseContents[[1]])
 
-  # return numeric version
-  numeric_version(version)
+    # Get rid of -preview and other suffix variations
+    version <- spark_version_clean(version)
+
+    # return numeric version
+    numeric_version(version)
+  }
 }
 
 #' Read configuration values for a connection
