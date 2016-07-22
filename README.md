@@ -96,9 +96,28 @@ The following sections describe the core mechanism uses to invoke the Spark API 
 
 Here are links to some additional examples of extension packages:
 
-| Package                                                      | Description                                     |
-|--------------------------------------------------------------|-------------------------------------------------|
-| [`spark.sas7bdat`](https://github.com/bnosac/spark.sas7bdat) | Read in SAS data in parallel into Apache Spark. |
+<table>
+<colgroup>
+<col width="38%" />
+<col width="61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/bnosac/spark.sas7bdat"><code>spark.sas7bdat</code></a></td>
+<td>Read in SAS data in parallel into Apache Spark.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/jjallaire/sparklingwater"><code>sparklingwater</code></a></td>
+<td>Simple demo / proof-of-concept extension for using the Sparking Water package from H2O.</td>
+</tr>
+</tbody>
+</table>
 
 Core Types
 ----------
@@ -264,10 +283,11 @@ When creating R packages which implement interfaces to Spark you may need to inc
 Your extension package can specify it's dependencies by implementing a function named `spark_dependencies` within the package (this function should *not* be publicly exported). For example, let's say you were creating an extension package named **sparkds** that needs to include a custom JAR as well as the Redshift and Apache Avro packages:
 
 ``` r
-spark_dependencies <- function(scala_version, spark_version, ...) {
+spark_dependencies <- function(spark_version, scala_version, ...) {
   spark_dependency(
     jars = c(
-      system.file(sprintf("java/sparkds_%s.jar", scala_version), package = "sparkds")
+      system.file(sprintf("java/sparkds_%s_%s.jar", spark_version, scala_version), 
+                  package = "sparkds")
     ),
     packages = c(
       sprintf("com.databricks:spark-redshift_%s:0.6.0", scala_version),
@@ -280,6 +300,8 @@ spark_dependencies <- function(scala_version, spark_version, ...) {
   sparkapi::register_extension(pkgname)
 }
 ```
+
+The `spark_version` argument is provided so that a package can support multiple Spark versions for it's JARs. Note that the argument will include just the major and minor versions (e.g. `1.6` or `2.0`) and will not include the patch level (as JARs built for a given major/minor version are expected to work for all patch levels).
 
 The `scala_version` argument is provided so that a single package can support multiple Scala compiler versions for it's JARs and packages (currently Scala downloadable binaries are compiled with Scala 2.10 but at some point Scala 2.11 will also be supported).
 

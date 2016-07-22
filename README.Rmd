@@ -84,8 +84,7 @@ Here are links to some additional examples of extension packages:
 | Package | Description  |
 |----------------------------|---------------------------------------------|
 | [`spark.sas7bdat`](https://github.com/bnosac/spark.sas7bdat) | Read in SAS data in parallel into Apache Spark. |
-
-
+| [`sparklingwater`](https://github.com/jjallaire/sparklingwater) | Simple demo / proof-of-concept extension for using the Sparking Water package from H2O.  |
 
 ## Core Types
 
