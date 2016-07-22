@@ -74,6 +74,11 @@ spark_dependencies_from_extension <- function(spark_version, scala_version, exte
   }
   )
 
+  # reduce the spark_version to just major and minor versions
+  spark_version <- package_version(spark_version)
+  spark_version <- paste(spark_version$major, spark_version$minor, sep = '.')
+  spark_version <- numeric_version(spark_version)
+
   # call the function
   dependency <- spark_dependencies(spark_version = spark_version,
                                    scala_version = scala_version)
