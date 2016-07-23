@@ -83,47 +83,6 @@ connection_is_open <- function(sc) {
   UseMethod("connection_is_open")
 }
 
-spark_version_clean <- function(version) {
-  gsub("([0-9]+\\.?)[^0-9\\.](.*)","\\1", version)
-}
-
-#' Version of Spark for a connection
-#'
-#' @param sc \code{spark_connection}
-#'
-#' @return A \code{\link{numeric_version}} object
-#'
-#' @export
-spark_version <- function(sc) {
-  # get the version
-  version <- invoke(spark_context(sc), "version")
-
-  # Get rid of -preview and other suffix variations
-  version <- spark_version_clean(version)
-
-  # return numeric version
-  numeric_version(version)
-}
-
-#' Version of Spark for a SPARK_HOME directory
-#'
-#' @param spark_home Path to SPARK_HOME
-#'
-#' @rdname spark_version
-#'
-#' @export
-spark_version_from_home <- function(spark_home) {
-  releaseFile <- file.path(spark_home, "RELEASE")
-  releaseContents <- readLines(releaseFile)
-  version <- gsub("Spark | built.*", "", releaseContents[[1]])
-
-  # Get rid of -preview and other suffix variations
-  version <- spark_version_clean(version)
-
-  # return numeric version
-  numeric_version(version)
-}
-
 #' Read configuration values for a connection
 #'
 #' @param sc \code{spark_connection}

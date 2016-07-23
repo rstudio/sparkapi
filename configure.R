@@ -22,6 +22,9 @@ compile_jars <- function() {
     return(FALSE)
   }
 
+  source("R/version.R")
+  source("R/compile.R")
+
   tryCatch(
     source("inst/tools/compile-scala.R"),
     error = function(e) {

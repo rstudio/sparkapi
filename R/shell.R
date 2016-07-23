@@ -3,6 +3,7 @@
 #' @param master Spark cluster url to connect to. Use \code{"local"} to connect to a local
 #'   instance of Spark
 #' @param spark_home Spark home directory (defaults to SPARK_HOME environment variable)
+#' @param spark_version Spark version, if not specified, version taken from SPARK_HOME
 #' @param app_name Application name to be used while running in the Spark cluster
 #' @param config Named character vector of spark.* options
 #' @param jars Paths to Jar files to include
@@ -18,6 +19,7 @@
 #' @export
 start_shell <- function(master,
                         spark_home = Sys.getenv("SPARK_HOME"),
+                        spark_version = NULL,
                         app_name = "sparkapi",
                         config = list(),
                         extensions = sparkapi::registered_extensions(),
@@ -28,7 +30,7 @@ start_shell <- function(master,
   # read app jar through config, this allows "sparkr-shell" to test sparkr backend
   app_jar <- spark_config_value(config, "sparkapi.app.jar", NULL)
   if (is.null(app_jar)) {
-    app_jar <- normalizePath(system.file(file.path("java", "sparkapi.jar"), package = "sparkapi"),
+    app_jar <- normalizePath(system.file(file.path("java", "sparkapi-1.6.1.jar"), package = "sparkapi"),
                              mustWork = FALSE)
     shell_args <- c(shell_args, "--class", "sparkapi.Backend")
   }
@@ -57,7 +59,12 @@ start_shell <- function(master,
   spark_submit_path <- normalizePath(file.path(spark_home, "bin", spark_submit))
 
   # resolve extensions
-  spark_version <- spark_version_from_home(spark_home)
+  spark_version <- numeric_version(
+    ifelse(is.null(spark_version),
+      spark_version_from_home(spark_home),
+      gsub("[-_a-zA-Z]", "", spark_version)
+    )
+  )
   scala_version <- numeric_version("2.10")
   extensions <- spark_dependencies_from_extensions(spark_version, scala_version, extensions)
 
