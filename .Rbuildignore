@@ -1,4 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 README.Rmd
+^configure$
+^configure\.win$
+^configure\.R$
 
