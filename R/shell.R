@@ -30,8 +30,8 @@ start_shell <- function(master,
   # read app jar through config, this allows "sparkr-shell" to test sparkr backend
   app_jar <- spark_config_value(config, "sparkapi.app.jar", NULL)
   if (is.null(app_jar)) {
-    app_jar <- normalizePath(system.file(file.path("java", "sparkapi-1.6.1.jar"), package = "sparkapi"),
-                             mustWork = FALSE)
+    app_jar <- shQuote(normalizePath(system.file(file.path("java", "sparkapi-1.6.1.jar"), package = "sparkapi"),
+                             mustWork = FALSE))
     shell_args <- c(shell_args, "--class", "sparkapi.Backend")
   }
 
