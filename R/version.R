@@ -28,11 +28,12 @@ spark_version_from_home_version <- function() {
 #' Version of Spark for a SPARK_HOME directory
 #'
 #' @param spark_home Path to SPARK_HOME
+#' @param default The version to use as default
 #'
 #' @rdname spark_version
 #'
 #' @export
-spark_version_from_home <- function(spark_home) {
+spark_version_from_home <- function(spark_home, default = NULL) {
   versionAttempts <- list(
     useReleaseFile = function() {
       versionedFile <- file.path(spark_home, "RELEASE")
@@ -73,6 +74,9 @@ spark_version_from_home <- function(spark_home) {
     },
     useEnvironmentVariable = function() {
       spark_version_from_home_version()
+    },
+    useDefault = function() {
+      default
     }
   )
 
