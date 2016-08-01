@@ -6,7 +6,7 @@ Introduction
 
 The [SparkR](https://github.com/apache/spark/tree/master/R) package introduces a custom RPC method that allows calling arbitrary Java/Scala code within the Spark shell process from R. The SparkR package's higher level functions are in turn built upon this RPC layer.
 
-SparkR provides one front-end from R to Spark, however the development of other front-end packages is desirable (e.g. a front-end that package that is compatible with [dplyr](https://github.com/hadley/dplyr), which SparkR is not due to it's masking of many of dplyr's functions). The [sparklyr](http://spark.rstudio.com) package is one example of an alternate front-end package for Spark.
+SparkR provides one front-end from R to Spark, however the development of other front-end packages is desirable (e.g. a front-end package that is compatible with [dplyr](https://github.com/hadley/dplyr), which SparkR is not due to it's masking of many of dplyr's functions). The [sparklyr](http://spark.rstudio.com) package is one example of an alternate front-end package for Spark.
 
 The **sparkapi** package factors out the RPC protocol from SparkR, with the goal of making the core types used by Spark front-end packages inter-operable. The sparkapi package provides access to the [SparkContext](https://spark.apache.org/docs/1.6.2/api/java/org/apache/spark/SparkContext.html) and [HiveContext](https://spark.apache.org/docs/1.6.2/api/java/org/apache/spark/sql/hive/HiveContext.html) as well as enables calling the full Spark Scala API.
 
