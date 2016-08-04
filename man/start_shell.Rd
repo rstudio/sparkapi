@@ -6,9 +6,9 @@
 \title{Start the Spark R Shell}
 \usage{
 start_shell(master, spark_home = Sys.getenv("SPARK_HOME"),
-  spark_version = NULL, hadoop_version = NULL, app_name = "sparkapi",
-  config = list(), extensions = sparkapi::registered_extensions(),
-  jars = NULL, packages = NULL, environment = NULL, shell_args = NULL)
+  spark_version = NULL, app_name = "sparkapi", config = list(),
+  extensions = sparkapi::registered_extensions(), jars = NULL,
+  packages = NULL, environment = NULL, shell_args = NULL)
 
 stop_shell(sc)
 }
@@ -19,8 +19,6 @@ instance of Spark}
 \item{spark_home}{Spark home directory (defaults to SPARK_HOME environment variable)}
 
 \item{spark_version}{Spark version, if not specified, version taken from SPARK_HOME}
-
-\item{hadoop_version}{Hadoop version, if not specified, version taken from SPARK_HOME}
 
 \item{app_name}{Application name to be used while running in the Spark cluster}
 
