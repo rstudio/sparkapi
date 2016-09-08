@@ -1,6 +1,3 @@
-# Sparklyr Extensions API
+# sparkapi
 
-Please see the documentation at http://spark.rstudio.com/extensions.html for information on how to create extensions for the [sparklyr](http://spark.rstudio.com) package.
-
-
-
+This project was merged back to [sparklyr](http://spark.rstudio.com). Please visit http://spark.rstudio.com/extensions.html for information.
